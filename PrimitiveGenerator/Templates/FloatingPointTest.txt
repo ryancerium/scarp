@@ -1,0 +1,153 @@
+using Scarp.Tests;
+using Xunit;
+using Xunit.Sdk;
+
+using Meter = Scarp.Primitive.PrimitiveClass<Scarp.Primitive.Tests.PrimitiveClassTest.MeterTag>;
+using Gram = Scarp.Primitive.PrimitiveClass<Scarp.Primitive.Tests.PrimitiveClassTest.GramTag>;
+
+namespace Scarp.Primitive.Tests {
+    public class PrimitiveClassTest {
+        public class MeterTag {
+        }
+        public class GramTag {
+        }
+
+        [Fact]
+        public void Assignment() {
+            Gram grams = Random.PrimitiveClass();
+            Assert.Throws<IsAssignableFromException>(() =>
+                Assert.IsAssignableFrom<Meter>(grams));
+        }
+
+        [Fact]
+        public void UnaryNegation() {
+            var expected = Random.PrimitiveClass();
+            Meter actual = expected;
+            Assert.Equal(-actual, new Meter(-expected));
+        }
+
+        [Fact]
+        public void PreIncrement() {
+            var expected = Random.PrimitiveClass();
+            Meter actual = expected;
+
+            ++expected;
+            Assert.Equal(new Meter(expected), ++actual);
+            Assert.Equal(expected, actual.Value);
+        }
+
+        [Fact]
+        public void PostIncrement() {
+            var expected = Random.PrimitiveClass();
+            Meter actual = expected;
+
+            Assert.Equal(new Meter(expected), actual++);
+            expected++;
+            Assert.Equal(expected, actual.Value);
+        }
+
+        [Fact]
+        public void PreDecrement() {
+            var expected = Random.PrimitiveClass();
+            Meter actual = expected;
+
+            --expected;
+            Assert.Equal(new Meter(expected), --actual);
+            Assert.Equal(expected, actual.Value);
+        }
+
+        [Fact]
+        public void PostDecrement() {
+            var expected = Random.PrimitiveClass();
+            Meter actual = expected;
+
+            Assert.Equal(new Meter(expected), actual--);
+            expected--;
+            Assert.Equal(expected, actual.Value);
+        }
+
+        [Fact]
+        public void Addition() {
+            var expected1 = Random.PrimitiveClass();
+            var expected2 = Random.PrimitiveClass();
+            var actual = new Meter(expected1) + new Meter(expected2);
+            Assert.Equal(expected1 + expected2, actual.Value);
+        }
+
+        [Fact]
+        public void Subtraction() {
+            var expected1 = Random.PrimitiveClass();
+            var expected2 = Random.PrimitiveClass();
+            var actual = new Meter(expected1) - new Meter(expected2);
+            Assert.Equal(expected1 - expected2, actual.Value);
+        }
+
+        [Fact]
+        public void Multiplication() {
+            var expected1 = Random.PrimitiveClass();
+            var expected2 = Random.PrimitiveClass();
+            var actual = new Meter(expected1) * new Meter(expected2);
+            Assert.Equal(expected1 * expected2, actual.Value);
+        }
+
+        [Fact]
+        public void Division() {
+            var expected1 = Random.PrimitiveClass();
+            var expected2 = Random.PrimitiveClass();
+            var actual = new Meter(expected1) / new Meter(expected2);
+            Assert.Equal(expected1 / expected2, actual.Value);
+        }
+
+        [Fact]
+        public void Modulus() {
+            var expected1 = Random.PrimitiveClass();
+            var expected2 = Random.PrimitiveClass();
+            var actual = new Meter(expected1) % new Meter(expected2);
+            Assert.Equal(expected1 % expected2, actual.Value);
+        }
+
+        [Fact]
+        public void Equality() {
+            var PrimitiveTypeValue = Random.PrimitiveClass();
+            Assert.True(new Meter(PrimitiveTypeValue) == new Meter(PrimitiveTypeValue));
+            Assert.False(new Meter(PrimitiveTypeValue) == new Meter(PrimitiveTypeValue - 1));
+        }
+
+        [Fact]
+        public void Inequality() {
+            var PrimitiveTypeValue = Random.PrimitiveClass();
+            Assert.False(new Meter(PrimitiveTypeValue) != new Meter(PrimitiveTypeValue));
+            Assert.True(new Meter(PrimitiveTypeValue) != new Meter(PrimitiveTypeValue - 1));
+        }
+
+        [Fact]
+        public void LessThan() {
+            var PrimitiveTypeValue = Random.PrimitiveClass();
+            Assert.True(new Meter(PrimitiveTypeValue) < new Meter(PrimitiveTypeValue + 1));
+            Assert.False(new Meter(PrimitiveTypeValue) < new Meter(PrimitiveTypeValue));
+        }
+
+        [Fact]
+        public void GreaterThan() {
+            var PrimitiveTypeValue = Random.PrimitiveClass();
+            Assert.True(new Meter(PrimitiveTypeValue + 1) > new Meter(PrimitiveTypeValue));
+            Assert.False(new Meter(PrimitiveTypeValue) > new Meter(PrimitiveTypeValue));
+        }
+
+        [Fact]
+        public void LessThanOrEqual() {
+            var PrimitiveTypeValue = Random.PrimitiveClass();
+            Assert.True(new Meter(PrimitiveTypeValue) <= new Meter(PrimitiveTypeValue + 1));
+            Assert.True(new Meter(PrimitiveTypeValue) <= new Meter(PrimitiveTypeValue));
+            Assert.False(new Meter(PrimitiveTypeValue) <= new Meter(PrimitiveTypeValue - 1));
+        }
+
+        [Fact]
+        public void GreaterThanOrEqual() {
+            var PrimitiveTypeValue = Random.PrimitiveClass();
+            Assert.False(new Meter(PrimitiveTypeValue) >= new Meter(PrimitiveTypeValue + 1));
+            Assert.True(new Meter(PrimitiveTypeValue) >= new Meter(PrimitiveTypeValue));
+            Assert.True(new Meter(PrimitiveTypeValue) >= new Meter(PrimitiveTypeValue - 1));
+        }
+    }
+}

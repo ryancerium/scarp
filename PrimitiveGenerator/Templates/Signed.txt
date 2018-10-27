@@ -1,0 +1,61 @@
+using System;
+
+namespace Scarp.Primitive {
+    public struct PrimitiveClass<Tag> : IComparable, IComparable<PrimitiveClass<Tag>>, IEquatable<PrimitiveClass<Tag>>, IFormattable {
+        public PrimitiveClass(PrimitiveType value) => Value = value;
+
+        public PrimitiveType Value {
+            get; private set;
+        }
+
+        public override string ToString() => Value.ToString();
+
+        public string ToString(string format, IFormatProvider formatProvider) => Value.ToString(format, formatProvider);
+
+        public override int GetHashCode() => Value.GetHashCode();
+
+        public override bool Equals(object obj) => obj is PrimitiveClass<Tag> other && Equals((PrimitiveClass<Tag>) other);
+
+        public bool Equals(PrimitiveClass<Tag> other) => Value.CompareTo(other.Value) == 0;
+
+        public int CompareTo(object obj) => (obj is PrimitiveClass<Tag> other) ? Value.CompareTo(other.Value) : 1;
+
+        public int CompareTo(PrimitiveClass<Tag> other) => Value.CompareTo(other.Value);
+
+        public static implicit operator PrimitiveClass<Tag>(PrimitiveType value) => new PrimitiveClass<Tag>(value);
+        //public static implicit operator PrimitiveType(PrimitiveClass<Tag> value) => value.Value;
+
+        #region Unary Operators
+
+        public static PrimitiveClass<Tag> operator -(PrimitiveClass<Tag> value) => new PrimitiveClass<Tag>(-value.Value);
+        public static PrimitiveClass<Tag> operator ~(PrimitiveClass<Tag> value) => new PrimitiveClass<Tag>(~value.Value);
+        public static PrimitiveClass<Tag> operator ++(PrimitiveClass<Tag> value) => new PrimitiveClass<Tag>(++value.Value);
+        public static PrimitiveClass<Tag> operator --(PrimitiveClass<Tag> value) => new PrimitiveClass<Tag>(--value.Value);
+
+        #endregion
+
+        #region Binary Operators
+
+        public static PrimitiveClass<Tag> operator +(PrimitiveClass<Tag> lhs, PrimitiveClass<Tag> rhs) => new PrimitiveClass<Tag>(lhs.Value + rhs.Value);
+        public static PrimitiveClass<Tag> operator -(PrimitiveClass<Tag> lhs, PrimitiveClass<Tag> rhs) => new PrimitiveClass<Tag>(lhs.Value - rhs.Value);
+        public static PrimitiveClass<Tag> operator *(PrimitiveClass<Tag> lhs, PrimitiveClass<Tag> rhs) => new PrimitiveClass<Tag>(lhs.Value * rhs.Value);
+        public static PrimitiveClass<Tag> operator /(PrimitiveClass<Tag> lhs, PrimitiveClass<Tag> rhs) => new PrimitiveClass<Tag>(lhs.Value / rhs.Value);
+        public static PrimitiveClass<Tag> operator %(PrimitiveClass<Tag> lhs, PrimitiveClass<Tag> rhs) => new PrimitiveClass<Tag>(lhs.Value % rhs.Value);
+        public static PrimitiveClass<Tag> operator |(PrimitiveClass<Tag> lhs, PrimitiveClass<Tag> rhs) => new PrimitiveClass<Tag>(lhs.Value | rhs.Value);
+        public static PrimitiveClass<Tag> operator &(PrimitiveClass<Tag> lhs, PrimitiveClass<Tag> rhs) => new PrimitiveClass<Tag>(lhs.Value & rhs.Value);
+        public static PrimitiveClass<Tag> operator ^(PrimitiveClass<Tag> lhs, PrimitiveClass<Tag> rhs) => new PrimitiveClass<Tag>(lhs.Value ^ rhs.Value);
+
+        #endregion
+
+        #region Comparison Operators
+
+        public static bool operator ==(PrimitiveClass<Tag> lhs, PrimitiveClass<Tag> rhs) => lhs.Equals(rhs);
+        public static bool operator !=(PrimitiveClass<Tag> lhs, PrimitiveClass<Tag> rhs) => !lhs.Equals(rhs);
+        public static bool operator <(PrimitiveClass<Tag> lhs, PrimitiveClass<Tag> rhs) => lhs.Value < rhs.Value;
+        public static bool operator >(PrimitiveClass<Tag> lhs, PrimitiveClass<Tag> rhs) => lhs.Value > rhs.Value;
+        public static bool operator <=(PrimitiveClass<Tag> lhs, PrimitiveClass<Tag> rhs) => lhs.Value <= rhs.Value;
+        public static bool operator >=(PrimitiveClass<Tag> lhs, PrimitiveClass<Tag> rhs) => lhs.Value >= rhs.Value;
+
+        #endregion
+    }
+}
