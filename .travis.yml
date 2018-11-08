@@ -1,0 +1,6 @@
+language: csharp
+solution: Scarp.sln
+dotnet: latest
+script:
+    - dotnet restore
+    - dotnet test Tests/Tests.csproj
