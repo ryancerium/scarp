@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace PrimitiveGenerator {
@@ -7,23 +9,35 @@ namespace PrimitiveGenerator {
         private const string PrimitiveClass = "PrimitiveClass";
         private const string PrimitiveType = "PrimitiveType";
 
+        private static string Value { get; } = "Hello";
         static void Main(string[] args) {
-            var primitive = new PrimitiveGenerator();
-            primitive.GenerateClass("UInt", Unsigned);
-            primitive.GenerateClass("ULong", Unsigned);
-            primitive.GenerateClass("Int", Signed);
-            primitive.GenerateClass("Long", Signed);
-            primitive.GenerateClass("Decimal", FloatingPoint);
-            primitive.GenerateClass("Double", FloatingPoint);
-            primitive.GenerateClass("Float", FloatingPoint);
 
-            primitive.GenerateTests("UInt", UnsignedTest);
-            primitive.GenerateTests("ULong", UnsignedTest);
-            primitive.GenerateTests("Int", SignedTest);
-            primitive.GenerateTests("Long", SignedTest);
-            primitive.GenerateTests("Decimal", FloatingPointTest);
-            primitive.GenerateTests("Double", FloatingPointTest);
-            primitive.GenerateTests("Float", FloatingPointTest);
+            string s = "hello/";
+            s.EndsWith('/');
+            Value.EndsWith('/');
+
+            var primitive = new PrimitiveGenerator();
+            foreach (var arg in args) {
+                if (arg == "primitive") {
+                    primitive.GenerateClass("UInt", Unsigned);
+                    primitive.GenerateClass("ULong", Unsigned);
+                    primitive.GenerateClass("Int", Signed);
+                    primitive.GenerateClass("Long", Signed);
+                    primitive.GenerateClass("Decimal", FloatingPoint);
+                    primitive.GenerateClass("Double", FloatingPoint);
+                    primitive.GenerateClass("Float", FloatingPoint);
+
+                    primitive.GenerateTests("UInt", UnsignedTest);
+                    primitive.GenerateTests("ULong", UnsignedTest);
+                    primitive.GenerateTests("Int", SignedTest);
+                    primitive.GenerateTests("Long", SignedTest);
+                    primitive.GenerateTests("Decimal", FloatingPointTest);
+                    primitive.GenerateTests("Double", FloatingPointTest);
+                    primitive.GenerateTests("Float", FloatingPointTest);
+                } else if (arg == "string") {
+                    primitive.GenerateString();
+                }
+            }
         }
 
         private static string Signed { get; } = GetResource("Signed.txt");
@@ -48,10 +62,78 @@ namespace PrimitiveGenerator {
             }
         }
 
+        private void GenerateString() {
+            using (var streamWriter = new StreamWriter(File.Create($"../Scarp/Primitive/StringGenerated.cs"))) {
+                streamWriter.Write(@"using System;
+using System.Globalization;
+using System.Text;
+
+namespace Scarp.Primitive {
+    public partial class String<Tag> {");
+                var stringType = typeof(string);
+
+                foreach (var method in stringType.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public)) {
+                    if (method.Name.Contains('_') || method.IsVirtual) {
+                        continue;
+                    }
+
+                    var returnType = method.GetReturnTypeName();
+                    var toStrArray = returnType == "String<Tag>[]" ? ".ToStringArray<Tag>()" : "";
+                    var genericArgs = "";
+                    if (method.IsGenericMethod) {
+                        genericArgs = string.Join(", ", method.GetGenericArguments().Select(arg => arg.Name));
+                        genericArgs = $"<{genericArgs}>";
+                    }
+                    var arguments = string.Join(", ", method.GetParameters().Select(p => $"{p.GetParameterTypeName()} {p.Name}"));
+                    var parameters = string.Join(", ", method.GetParameters().Select(p => p.Name));
+
+                    streamWriter.Write($"");
+                    streamWriter.Write($@"
+        public {returnType} {method.Name}{genericArgs}({arguments}) => Value.{method.Name}({parameters}){toStrArray};");
+                }
+
+                streamWriter.Write(@"
+    }
+}");
+            }
+        }
+
         private static string GetResource(string resourceName) {
             var assembly = Assembly.GetExecutingAssembly();
             using (var stream = new StreamReader(assembly.GetManifestResourceStream($"PrimitiveGenerator.Templates.{resourceName}"))) {
                 return stream.ReadToEnd();
+            }
+        }
+    }
+
+    internal static class ReflectionExt {
+        public static string JoinWith(this IEnumerable<string> strings, string separator) =>
+            string.Join(separator, strings);
+
+        public static string GetReturnTypeName(this MethodInfo methodInfo) {
+            var typeName = GetTypeName(methodInfo.ReturnType);
+            return
+                typeName == "string" ? "String<Tag>" :
+                typeName == "string[]" ? "String<Tag>[]" :
+                typeName;
+        }
+
+        public static string GetParameterTypeName(this ParameterInfo parameterInfo) =>
+            GetTypeName(parameterInfo.ParameterType);
+
+        public static string GetTypeName(this Type typeInfo) {
+            switch (typeInfo.Name) {
+                case "Boolean":
+                    return "bool";
+                case "Int32":
+                    return "int";
+                case "Char":
+                case "String":
+                case "String[]":
+                case "Void":
+                    return typeInfo.Name.ToLower();
+                default:
+                    return typeInfo.Name;
             }
         }
     }
