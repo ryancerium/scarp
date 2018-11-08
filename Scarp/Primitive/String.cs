@@ -40,9 +40,7 @@ namespace Scarp.Primitive {
 
         public static String<Tag> operator+(String<Tag> lhs, String<Tag> rhs) => lhs.Value + rhs.Value;
 
-        private void tryCopde() {
-            var a = "" - "";
-        }
+        public char this[int i] => Value[i];
 
         #region Interface Implementations
         IEnumerator<char> IEnumerable<char>.GetEnumerator() => Value.GetEnumerator();

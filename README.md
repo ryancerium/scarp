@@ -1,4 +1,6 @@
-# Welcome to Scarp!
+# Scarp
+
+[![Build Status](https://travis-ci.com/ryancerium/scarp.svg?branch=master)](https://travis-ci.com/ryancerium/scarp)
 
 This library was inspired by Jonathan Müller's `type_safe` library, and the general advice to avoid primitive obsession.
 It contains `struct`s meant to add type safety for fields that are represented by built-in types, like `int`, `float` values, and `string`s.

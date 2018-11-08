@@ -1,6 +1,8 @@
 language: csharp
 solution: Scarp.sln
-dotnet: latest
-script:
+mono: none
+dotnet: 2.1.403
+install:
     - dotnet restore
+script:
     - dotnet test Tests/Tests.csproj
