@@ -1,7 +1,10 @@
+using Newtonsoft.Json;
 using Scarp.Tests;
+using System.Text.RegularExpressions;
 using Xunit;
 using Xunit.Sdk;
 
+using Math = System.Math;
 using Meter = Scarp.Primitive.PrimitiveClass<Scarp.Primitive.Tests.PrimitiveClassTest.MeterTag>;
 using Gram = Scarp.Primitive.PrimitiveClass<Scarp.Primitive.Tests.PrimitiveClassTest.GramTag>;
 
@@ -10,6 +13,39 @@ namespace Scarp.Primitive.Tests {
         public class MeterTag {
         }
         public class GramTag {
+        }
+
+        internal class Location {
+            private const PrimitiveType EPSILON = (PrimitiveType) 0.000001;
+
+            public Meter x;
+            public Meter? y;
+
+            public override bool Equals(object obj) =>
+                obj is Location other &&
+                Math.Abs((x - other.x).Value) < EPSILON &&
+                Math.Abs((y.Value - other.y.Value).Value) < EPSILON;
+
+            public override int GetHashCode() => x.GetHashCode() ^ y.GetHashCode();
+        }
+
+        [Fact]
+        public void ToJsonTest() {
+            var location = new Location { x = Random.PrimitiveClass(), y = Random.PrimitiveClass() };
+            var actual = JsonConvert.SerializeObject(location);
+
+            var x = $"{location.x:0.########}".Substring(0, 8);
+            var y = $"{location.y:0.########}".Substring(0, 8);
+            var regex = new Regex($@"{{""x"":{x}\d*,""y"":{y}\d*}}");
+            Assert.True(regex.IsMatch(actual), $"'{actual}' did not match pattern: {regex}");
+        }
+
+        [Fact]
+        public void FromJsonTest() {
+            var expected = new Location { x = Random.PrimitiveClass(), y = Random.PrimitiveClass() };
+            var json = $"{{\"x\":{expected.x},\"y\":{expected.y}}}";
+            var actual = JsonConvert.DeserializeObject<Location>(json);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]

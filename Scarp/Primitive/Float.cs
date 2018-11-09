@@ -1,6 +1,8 @@
 using System;
+using Newtonsoft.Json;
 
 namespace Scarp.Primitive {
+    [JsonConverter(typeof(PrimitiveJsonConverter))]
     public struct Float<Tag> : IComparable, IComparable<Float<Tag>>, IEquatable<Float<Tag>>, IFormattable {
         public Float(float value) => Value = value;
 

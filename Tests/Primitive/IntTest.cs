@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Scarp.Tests;
 using Xunit;
 using Xunit.Sdk;
@@ -10,6 +11,34 @@ namespace Scarp.Primitive.Tests {
         public class MeterTag {
         }
         public class GramTag {
+        }
+
+        internal class Location {
+            public Meter x;
+            public Meter? y;
+
+            public override bool Equals(object obj) =>
+                obj is Location other && other.x == x && other.y == y;
+
+            public override int GetHashCode() => x.GetHashCode() ^ y.GetHashCode();
+        }
+
+        [Fact]
+        public void ToJsonTest() {
+            var location = new Location { x = Random.Int(), y = Random.Int() };
+            var actual = JsonConvert.SerializeObject(location);
+
+            var expected = $"{{\"x\":{location.x},\"y\":{location.y}}}";
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void FromJsonTest() {
+            var expected = new Location { x = Random.Int(), y = Random.Int() };
+            var json = $"{{\"x\":{expected.x},\"y\":{expected.y}}}";
+            var actual = JsonConvert.DeserializeObject<Location>(json);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]

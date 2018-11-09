@@ -1,6 +1,8 @@
 using System;
+using Newtonsoft.Json;
 
 namespace Scarp.Primitive {
+    [JsonConverter(typeof(PrimitiveJsonConverter))]
     public struct Decimal<Tag> : IComparable, IComparable<Decimal<Tag>>, IEquatable<Decimal<Tag>>, IFormattable {
         public Decimal(decimal value) => Value = value;
 

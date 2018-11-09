@@ -1,6 +1,8 @@
 using System;
+using Newtonsoft.Json;
 
 namespace Scarp.Primitive {
+    [JsonConverter(typeof(PrimitiveJsonConverter))]
     public struct PrimitiveClass<Tag> : IComparable, IComparable<PrimitiveClass<Tag>>, IEquatable<PrimitiveClass<Tag>>, IFormattable {
         public PrimitiveClass(PrimitiveType value) => Value = value;
 

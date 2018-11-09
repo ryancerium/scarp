@@ -38,7 +38,7 @@ namespace Scarp.Primitive {
 
         public static bool operator !=(String<Tag> lhs, String<Tag> rhs) => lhs.Value != rhs.Value;
 
-        public static String<Tag> operator+(String<Tag> lhs, String<Tag> rhs) => lhs.Value + rhs.Value;
+        public static String<Tag> operator +(String<Tag> lhs, String<Tag> rhs) => lhs.Value + rhs.Value;
 
         public char this[int i] => Value[i];
 
