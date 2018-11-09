@@ -11,11 +11,6 @@ namespace PrimitiveGenerator {
 
         private static string Value { get; } = "Hello";
         static void Main(string[] args) {
-
-            string s = "hello/";
-            s.EndsWith('/');
-            Value.EndsWith('/');
-
             var primitive = new PrimitiveGenerator();
             foreach (var arg in args) {
                 if (arg == "primitive") {
