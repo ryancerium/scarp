@@ -19,7 +19,7 @@ using LastName = Scarp.Primitive.String<LastNameTag>;
 using Age = Scarp.Primitive.Int<AgeTag>;
 using Height = Scarp.Primitive.Float<MeterTag>;
 
-namespace PeopleSoft {i
+namespace PeopleSoft {
     public class Person {
         FirstName FirstName { get; set; }
         LastName LastName { get; set; }
