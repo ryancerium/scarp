@@ -23,6 +23,10 @@ namespace Scarp.Primitive {
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
+            if(reader.Value == null) {
+                return null;
+            }
+
             ConstructorInfo constructor = null;
             object value = null;
 
@@ -61,6 +65,10 @@ namespace Scarp.Primitive {
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
+            if (value == null) {
+                writer.WriteNull();
+                return;
+            }
             dynamic dValue = value;
             dynamic dValueValue = dValue.Value;
             writer.WriteValue(dValueValue);

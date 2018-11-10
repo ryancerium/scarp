@@ -64,7 +64,7 @@ using System.Globalization;
 using System.Text;
 
 namespace Scarp.Primitive {
-    public partial class String<Tag> {");
+    public partial struct String<Tag> {");
                 var stringType = typeof(string);
 
                 foreach (var method in stringType.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public)) {

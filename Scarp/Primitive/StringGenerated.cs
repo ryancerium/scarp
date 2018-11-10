@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text;
 
 namespace Scarp.Primitive {
-    public partial class String<Tag> {
+    public partial struct String<Tag> {
         public void CopyTo(int sourceIndex, Char[] destination, int destinationIndex, int count) => Value.CopyTo(sourceIndex, destination, destinationIndex, count);
         public Char[] ToCharArray() => Value.ToCharArray();
         public Char[] ToCharArray(int startIndex, int length) => Value.ToCharArray(startIndex, length);
