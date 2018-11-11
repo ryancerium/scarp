@@ -43,7 +43,7 @@ namespace Scarp.Primitive.Tests {
         [Fact]
         public void FromJsonTest() {
             var expected = new Location { x = Random.Decimal(), y = Random.Decimal() };
-            var json = $"{{\"x\":{expected.x},\"y\":{expected.y}}}";
+            var json = $@"{{""x"":{expected.x},""y"":{expected.y}}}";
             var actual = JsonConvert.DeserializeObject<Location>(json);
             Assert.Equal(expected, actual);
         }

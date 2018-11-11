@@ -28,7 +28,7 @@ namespace Scarp.Primitive.Tests {
             var location = new Location { x = Random.PrimitiveClass(), y = Random.PrimitiveClass() };
             var actual = JsonConvert.SerializeObject(location);
 
-            var expected = $"{{\"x\":{location.x},\"y\":{location.y}}}";
+            var expected = $@"{{""x"":{location.x},""y"":{location.y}}}";
 
             Assert.Equal(expected, actual);
         }
@@ -36,7 +36,7 @@ namespace Scarp.Primitive.Tests {
         [Fact]
         public void FromJsonTest() {
             var expected = new Location { x = Random.PrimitiveClass(), y = Random.PrimitiveClass() };
-            var json = $"{{\"x\":{expected.x},\"y\":{expected.y}}}";
+            var json = $@"{{""x"":{expected.x},""y"":{expected.y}}}";
             var actual = JsonConvert.DeserializeObject<Location>(json);
             Assert.Equal(expected, actual);
         }
