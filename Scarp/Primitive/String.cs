@@ -20,7 +20,9 @@ namespace Scarp.Primitive {
 
         public override int GetHashCode() => Value.GetHashCode();
 
-        public override bool Equals(object obj) => obj is String<Tag> other && Equals(other);
+        public override bool Equals(object obj) =>
+            object.ReferenceEquals(obj, Value) ||
+            (obj is String<Tag> other && Equals(other));
 
         public bool Equals(Int<Tag> other) => Value.CompareTo(other.Value) == 0;
 

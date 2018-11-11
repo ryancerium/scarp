@@ -58,7 +58,7 @@ namespace PrimitiveGenerator {
         }
 
         private void GenerateString() {
-            using (var streamWriter = new StreamWriter(File.Create($"../Scarp/Primitive/StringGenerated.cs"))) {
+            using (var streamWriter = new StreamWriter(File.Create("../Scarp/Primitive/StringGenerated.cs"))) {
                 streamWriter.Write(@"using System;
 using System.Globalization;
 using System.Text;

@@ -5,8 +5,9 @@ using Newtonsoft.Json;
 namespace Scarp.Primitive {
     public class PrimitiveJsonConverter : JsonConverter {
         public override bool CanConvert(Type t) {
-            // Using Int<T> as a sample type, but applies to all Scarp.Primitive types.
-            // Strip a Nullable<Int<T>> to a Int<T> if necessary
+            // Uses Int<T> as a sample type, but applies to all Scarp.Primitive types.
+
+            // Reduce a Nullable<Int<T>> to a Int<T> if necessary
             t = t.GetUnderlyingNullableType();
             if (!t.IsGenericType) {
                 return false;
@@ -23,55 +24,66 @@ namespace Scarp.Primitive {
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
-            if(reader.Value == null) {
+            if (reader.Value == null) {
                 return null;
             }
 
-            ConstructorInfo constructor = null;
-            object value = null;
+            // Int<YearTag>, with YearTag as a sample tag type
+            var closedType = objectType.GetUnderlyingNullableType();
 
-            var type = objectType.GetUnderlyingNullableType();
-            var generic = type.GetGenericTypeDefinition();
+            // Int<>, with no tag type
+            var openType = closedType.GetGenericTypeDefinition();
 
-            if (generic == typeof(Int<>)) {
-                constructor = type.GetConstructor(new Type[] { typeof(int) });
-                value = Convert.ToInt32(reader.Value);
-            } else if (generic == typeof(UInt<>)) {
-                constructor = type.GetConstructor(new Type[] { typeof(uint) });
-                value = Convert.ToUInt32(reader.Value);
-            } else if (generic == typeof(Long<>)) {
-                constructor = type.GetConstructor(new Type[] { typeof(long) });
-                value = Convert.ToInt64(reader.Value);
-            } else if (generic == typeof(ULong<>)) {
-                constructor = type.GetConstructor(new Type[] { typeof(ulong) });
-                value = Convert.ToUInt64(reader.Value);
-            } else if (generic == typeof(Float<>)) {
-                constructor = type.GetConstructor(new Type[] { typeof(float) });
-                value = (float) Convert.ToDouble(reader.Value);
-            } else if (generic == typeof(Double<>)) {
-                constructor = type.GetConstructor(new Type[] { typeof(double) });
-                value = Convert.ToDouble(reader.Value);
-            } else if (generic == typeof(Decimal<>)) {
-                constructor = type.GetConstructor(new Type[] { typeof(decimal) });
-                value = Convert.ToDecimal(reader.Value);
-            } else if (generic == typeof(String<>)) {
-                constructor = type.GetConstructor(new Type[] { typeof(string) });
-                value = reader.Value;
+            // integer values are read from JSON as Int64
+            // floating point values are read from JSON as Double
+            if (openType == typeof(Int<>)) {
+                return closedType
+                    .GetConstructor(typeof(int))
+                    .Invoke(Convert.ToInt32(reader.Value));
+            } else if (openType == typeof(UInt<>)) {
+                return closedType
+                    .GetConstructor(typeof(uint))
+                    .Invoke(Convert.ToUInt32(reader.Value));
+            } else if (openType == typeof(Long<>)) {
+                return closedType
+                    .GetConstructor(typeof(long))
+                    .Invoke(reader.Value);
+            } else if (openType == typeof(ULong<>)) {
+                return closedType
+                    .GetConstructor(typeof(ulong))
+                    .Invoke(Convert.ToUInt64(reader.Value));
+            } else if (openType == typeof(Float<>)) {
+                return closedType
+                    .GetConstructor(typeof(float))
+                    .Invoke(Convert.ToSingle(reader.Value));
+            } else if (openType == typeof(Double<>)) {
+                return closedType
+                    .GetConstructor(typeof(double))
+                    .Invoke(Convert.ToDouble(reader.Value));
+            } else if (openType == typeof(Decimal<>)) {
+                return closedType
+                    .GetConstructor(typeof(decimal))
+                    .Invoke(Convert.ToDecimal(reader.Value));
+            } else if (openType == typeof(String<>)) {
+                return closedType
+                    .GetConstructor(typeof(string))
+                    .Invoke(reader.Value);
             } else {
                 throw new Exception($"Unknown type: {objectType.Name}");
             }
-
-            return constructor.Invoke(new object[] { value });
         }
+
+        readonly object[] p = new object[] { };
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
             if (value == null) {
                 writer.WriteNull();
                 return;
             }
-            dynamic dValue = value;
-            dynamic dValueValue = dValue.Value;
-            writer.WriteValue(dValueValue);
+
+            var closedType = value.GetType();
+            var property = closedType.GetProperty("Value");
+            writer.WriteValue(property.GetValue(value));
         }
     }
 
@@ -81,5 +93,11 @@ namespace Scarp.Primitive {
                 ? Nullable.GetUnderlyingType(t)
                 : t;
         }
+
+        public static object Invoke(this ConstructorInfo constructor, params object[] types) =>
+            constructor.Invoke(types);
+
+        public static ConstructorInfo GetConstructor(this Type type, params Type[] types) =>
+            type.GetConstructor(types);
     }
 }

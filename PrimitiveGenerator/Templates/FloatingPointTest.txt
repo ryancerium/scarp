@@ -34,8 +34,8 @@ namespace Scarp.Primitive.Tests {
             var location = new Location { x = Random.PrimitiveClass(), y = Random.PrimitiveClass() };
             var actual = JsonConvert.SerializeObject(location);
 
-            var x = $"{location.x:0.########}".Substring(0, 8);
-            var y = $"{location.y:0.########}".Substring(0, 8);
+            var x = $"{location.x:0.########}".SubstringMaxLength(0, 8);
+            var y = $"{location.y:0.########}".SubstringMaxLength(0, 8);
             var regex = new Regex($@"{{""x"":{x}\d*,""y"":{y}\d*}}");
             Assert.True(regex.IsMatch(actual), $"'{actual}' did not match pattern: {regex}");
         }
