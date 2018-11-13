@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrimitiveGenerator", "Primi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{87F4290D-44AF-46B9-924D-049D8EE55C6C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFrameworkCore", "EntityFrameworkCore\EntityFrameworkCore.csproj", "{DD1DC774-3542-460F-9514-7245C7A9AF37}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,5 +60,17 @@ Global
 		{87F4290D-44AF-46B9-924D-049D8EE55C6C}.Release|x64.Build.0 = Release|Any CPU
 		{87F4290D-44AF-46B9-924D-049D8EE55C6C}.Release|x86.ActiveCfg = Release|Any CPU
 		{87F4290D-44AF-46B9-924D-049D8EE55C6C}.Release|x86.Build.0 = Release|Any CPU
+		{DD1DC774-3542-460F-9514-7245C7A9AF37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD1DC774-3542-460F-9514-7245C7A9AF37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD1DC774-3542-460F-9514-7245C7A9AF37}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DD1DC774-3542-460F-9514-7245C7A9AF37}.Debug|x64.Build.0 = Debug|Any CPU
+		{DD1DC774-3542-460F-9514-7245C7A9AF37}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DD1DC774-3542-460F-9514-7245C7A9AF37}.Debug|x86.Build.0 = Debug|Any CPU
+		{DD1DC774-3542-460F-9514-7245C7A9AF37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD1DC774-3542-460F-9514-7245C7A9AF37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD1DC774-3542-460F-9514-7245C7A9AF37}.Release|x64.ActiveCfg = Release|Any CPU
+		{DD1DC774-3542-460F-9514-7245C7A9AF37}.Release|x64.Build.0 = Release|Any CPU
+		{DD1DC774-3542-460F-9514-7245C7A9AF37}.Release|x86.ActiveCfg = Release|Any CPU
+		{DD1DC774-3542-460F-9514-7245C7A9AF37}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

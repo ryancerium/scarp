@@ -13,7 +13,9 @@ namespace PrimitiveGenerator {
         static void Main(string[] args) {
             var primitive = new PrimitiveGenerator();
             foreach (var arg in args) {
-                if (arg == "primitive") {
+                if (arg == "efcore") {
+                    primitive.GenerateValueConverters();
+                } else if (arg == "primitive") {
                     primitive.GenerateClass("UInt", Unsigned);
                     primitive.GenerateClass("ULong", Unsigned);
                     primitive.GenerateClass("Int", Signed);
@@ -54,6 +56,28 @@ namespace PrimitiveGenerator {
                 streamWriter.Write(
                     template.Replace(PrimitiveClass, className)
                             .Replace(PrimitiveType, className.ToLower()));
+            }
+        }
+
+        private void GenerateValueConverters() {
+            using (var streamWriter = new StreamWriter(File.Create("../Scarp.EntityFrameworkCore/ScarpValueConverters.cs"))) {
+                streamWriter.Write(@"using Scarp.Primitive;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+
+namespace Scarp.EntityFrameworkCore.Storage.ValueConversion {");
+
+                streamWriter.Write(string.Join(@"
+",
+                new[] { "Int", "UInt", "Long", "ULong", "Float", "Double", "Decimal" }.Select(type =>
+                     @"
+    public class PrimitiveClassValueConverter<Tag> : ValueConverter<PrimitiveClass<Tag>, PrimitiveType> {
+        public PrimitiveClassValueConverter(ConverterMappingHints mappingHints = null)
+            : base(e => e.Value, e => new PrimitiveClass<Tag>(e), mappingHints) { }
+    }".Replace(PrimitiveClass, type)
+       .Replace(PrimitiveType, type.ToLower()))));
+
+                streamWriter.Write(@"
+}");
             }
         }
 
