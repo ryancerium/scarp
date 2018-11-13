@@ -5,16 +5,16 @@ using Xunit;
 namespace Scarp.Result.Tests {
     public class ResultSuccessTest {
         [Fact]
-        public void MakeSuccess() {
+        public void ResultSuccess() {
             var expected = Random.Int();
-            var actual = Make.Success(expected);
+            var actual = Result.Success(expected);
             Assert.Equal(expected, actual.Value);
         }
 
         [Fact]
-        public void MakeSuccessToResult() {
+        public void ResultSuccessToResult() {
             var expected = Random.Int();
-            Result<int, int> result = Make.Success(expected);
+            Result<int, int> result = Result.Success(expected);
 
             int actual;
             Assert.True(result.TrySuccess(out actual));

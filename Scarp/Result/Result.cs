@@ -2,22 +2,31 @@ using System;
 
 namespace Scarp.Result {
     /// <summary>
+    /// Static class with methods for creating ResultSuccess and ResultError values.
+    /// </summary>
+    public static class Result {
+        /// <summary>
+        /// Uses type inference to make a ResultSuccess&lt;T&gt;
+        /// </summary>
+        public static ResultSuccess<T> Success<T>(T t) => new ResultSuccess<T>(t);
+
+        /// <summary>
+        /// Uses type inference to make a ResultError&lt;E&gt;
+        /// </summary>
+        public static ResultError<E> Error<E>(E e) => new ResultError<E>(e);
+    }
+
+    /// <summary>
     /// Represents either a successful return value or a failed error value.
     /// </summary>
     /// <typeparam name="T">Success return type</typeparam>
     /// <typeparam name="E">Failure error type</typeparam>
     public struct Result<T, E> : IEquatable<Result<T, E>> {
-        private T SuccessValue {
-            get;
-        }
+        private T SuccessValue { get; }
 
-        private E ErrorValue {
-            get;
-        }
+        private E ErrorValue { get; }
 
-        private bool IsSuccess {
-            get;
-        }
+        private bool IsSuccess { get; }
 
         private bool IsError => !IsSuccess;
 
@@ -37,10 +46,10 @@ namespace Scarp.Result {
         public static implicit operator Result<T, E>(ResultError<E> error) =>
             new Result<T, E>(default(T), error.Value, false);
 
-        private Result(T t, E e, bool ok) {
+        private Result(T t, E e, bool success) {
             SuccessValue = t;
             ErrorValue = e;
-            IsSuccess = ok;
+            IsSuccess = success;
         }
 
         /// <summary>
@@ -115,7 +124,7 @@ namespace Scarp.Result {
 
         public override int GetHashCode() => IsSuccess ? SuccessValue.GetHashCode() : ErrorValue.GetHashCode();
 
-        public override bool Equals(object other) => other is Result<T, E> && Equals((Result<T, E>) other);
+        public override bool Equals(object other) => other is Result<T, E> result && Equals(result);
 
         public bool Equals(Result<T, E> other) =>
             IsSuccess

@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace Scarp.Primitive {
     [JsonConverter(typeof(PrimitiveJsonConverter))]
-    public partial struct String<Tag> : IEnumerable<char>, IEnumerable, ICloneable, IComparable, IComparable<System.String>, IComparable<String<Tag>>, IEquatable<String<Tag>> {
+    public partial struct String<Tag> : IEnumerable<char>, IEnumerable, ICloneable, IComparable, IComparable<String<Tag>>, IEquatable<String<Tag>> {
         public string Value { get; }
 
         private int Length => Value.Length;
@@ -44,8 +44,6 @@ namespace Scarp.Primitive {
         public object Clone() => new String<Tag>(Value);
 
         public int CompareTo(object obj) => (obj is String<Tag> other) ? Value.CompareTo(other.Value) : 1;
-
-        public int CompareTo(string other) => Value.CompareTo(other);
 
         public int CompareTo(String<Tag> other) => Value.CompareTo(other.Value);
 
