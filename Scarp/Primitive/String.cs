@@ -21,10 +21,7 @@ namespace Scarp.Primitive {
         public override int GetHashCode() => Value.GetHashCode();
 
         public override bool Equals(object obj) =>
-            object.ReferenceEquals(obj, Value) ||
-            (obj is String<Tag> other && Equals(other));
-
-        public bool Equals(Int<Tag> other) => Value.CompareTo(other.Value) == 0;
+            object.ReferenceEquals(obj, Value) || (obj is String<Tag> other && Equals(other));
 
         public static implicit operator String<Tag>(string s) => new String<Tag>(s);
 
@@ -47,17 +44,19 @@ namespace Scarp.Primitive {
 
         public int CompareTo(String<Tag> other) => Value.CompareTo(other.Value);
 
-        public TypeCode GetTypeCode() {
-            return Value.GetTypeCode();
-        }
+        public TypeCode GetTypeCode() => Value.GetTypeCode();
 
         public string ToString(IFormatProvider provider) => Value.ToString(provider);
 
-        public bool Equals(string other) {
-            return Value.Equals(other);
-        }
-
         public bool Equals(String<Tag> other) {
+            if (object.ReferenceEquals(Value, other.Value)) {
+                return true;
+            }
+
+            if (Value == null || other.Value == null) {
+                return false;
+            }
+
             return Value.Equals(other.Value);
         }
 

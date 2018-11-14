@@ -57,9 +57,9 @@ namespace Scarp.Result.Tests {
             Assert.True(result.TryError(out errorActual));
             Assert.Equal(errorExpected, errorActual);
 
-            int successActual = -1;
-            Assert.False(result.TrySuccess(out successActual));
-            Assert.Equal(successActual, default(int));
+            int successValue = -1;
+            Assert.False(result.TrySuccess(out successValue));
+            Assert.Equal(default(int), successValue);
         }
 
         [Fact]
@@ -138,6 +138,27 @@ namespace Scarp.Result.Tests {
             Assert.False(lhs.Equals(rhsWrong));
             Assert.False(lhs.Equals(rhsWrongObject));
             Assert.False(lhs == rhsWrong);
+        }
+
+        [Fact]
+        public void NullEquality() {
+            Result<string, string> lhs = Result.Success<string>(null);
+            Result<string, string> rhs = Result.Success<string>(null);
+            Assert.Equal(lhs, rhs);
+            Assert.Equal(rhs, lhs);
+
+            rhs = Result.Success<string>(Random.String10());
+            Assert.NotEqual(lhs, rhs);
+            Assert.NotEqual(rhs, lhs);
+
+            lhs = Result.Error<string>(null);
+            rhs = Result.Error<string>(null);
+            Assert.Equal(lhs, rhs);
+            Assert.Equal(rhs, lhs);
+
+            rhs = Result.Error<string>(Random.String10());
+            Assert.NotEqual(lhs, rhs);
+            Assert.NotEqual(rhs, lhs);
         }
     }
 }

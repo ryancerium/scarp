@@ -126,10 +126,34 @@ namespace Scarp.Result {
 
         public override bool Equals(object other) => other is Result<T, E> result && Equals(result);
 
-        public bool Equals(Result<T, E> other) =>
-            IsSuccess
-                ? other.IsSuccess && SuccessValue.Equals(other.SuccessValue)
-                : other.IsError && ErrorValue.Equals(other.ErrorValue);
+        public bool Equals(Result<T, E> other) {
+            if (IsSuccess && other.IsSuccess) {
+                if (object.ReferenceEquals(SuccessValue, other.SuccessValue)) {
+                    return true;
+                }
+
+                if (SuccessValue == null || other.SuccessValue == null) {
+                    return false;
+                }
+
+                return SuccessValue.Equals(other.SuccessValue);
+            }
+
+            if (IsError && other.IsError) {
+                if (object.ReferenceEquals(ErrorValue, other.ErrorValue)) {
+                    return true;
+                }
+
+                if (ErrorValue == null || other.ErrorValue == null) {
+                    return false;
+                }
+
+                return ErrorValue.Equals(other.ErrorValue);
+            }
+
+            return false;
+
+        }
 
         public static bool operator ==(Result<T, E> lhs, Result<T, E> rhs) => lhs.Equals(rhs);
 

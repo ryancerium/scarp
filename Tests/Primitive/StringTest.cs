@@ -47,5 +47,20 @@ namespace Scarp.Primitive.Tests {
             var actual = JsonConvert.DeserializeObject<Person>(json);
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public void EqualsTest() {
+            FirstName lhs = null;
+            FirstName rhs = null;
+
+            Assert.Equal(lhs, rhs);
+            Assert.True(lhs.Equals(null));
+            Assert.Equal(rhs, lhs);
+
+            rhs = Random.String10();
+            Assert.NotEqual(lhs, rhs);
+            Assert.NotEqual(rhs, lhs);
+            Assert.False(rhs.Equals(null));
+        }
     }
 }
