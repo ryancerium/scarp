@@ -73,8 +73,6 @@ namespace Scarp.Primitive {
             }
         }
 
-        readonly object[] p = new object[] { };
-
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
             if (value == null) {
                 writer.WriteNull();

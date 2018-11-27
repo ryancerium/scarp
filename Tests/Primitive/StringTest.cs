@@ -35,7 +35,7 @@ namespace Scarp.Primitive.Tests {
             var person = new Person { f = Random.String10(), m = null, l = Random.String10() };
             var actual = JsonConvert.SerializeObject(person);
 
-            var expected = $"{{\"f\":\"{person.f}\",\"m\":null,\"l\":\"{person.l}\"}}";
+            var expected = $@"{{""f"":""{person.f}"",""m"":null,""l"":""{person.l}""}}";
 
             Assert.Equal(expected, actual);
         }
@@ -43,7 +43,7 @@ namespace Scarp.Primitive.Tests {
         [Fact]
         public void FromJsonTest() {
             var expected = new Person { f = Random.String10(), m = null, l = Random.String10() };
-            var json = $"{{\"f\":\"{expected.f}\",\"m\":null,\"l\":\"{expected.l}\"}}";
+            var json = $@"{{""f"":""{expected.f}"",""m"":null,""l"":""{expected.l}""}}";
             var actual = JsonConvert.DeserializeObject<Person>(json);
             Assert.Equal(expected, actual);
         }
