@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Version>0.1.0</Version>
+    <Authors>Ryan Phelps</Authors>
+    <Copyright>MIT License</Copyright>
+    <Description>A type-safe library for C# programming.</Description>
+    <IncludeSource>true</IncludeSource>
+    <IncludeSymbols>true</IncludeSymbols>
+    <PackageDescription>A type-safe library for C# programming.</PackageDescription>
+    <PackageId>Scarp</PackageId>
+    <PackageLicenseUrl>https://github.com/ryancerium/scarp/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/ryancerium/scarp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ryancerium/scarp</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
