@@ -20,7 +20,7 @@ namespace Scarp.Result.Tests {
             Assert.True(result.TryError(out actual));
             Assert.Equal(expected, actual);
 
-            Assert.False(result.TrySuccess(out actual));
+            Assert.False(result.TryOk(out actual));
             Assert.Equal(default(int), actual);
         }
     }

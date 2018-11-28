@@ -74,29 +74,29 @@ modelBuilder
 This class was inspired by Rust's `Result<T, E>` enum type.
 C# has limitations without a robust `match()` statement, but c'est la vie.
 
-### `static ResultSuccess<T> Result.Success<T>(T t)`
+### `static ResultOk<T> Result.Ok<T>(T t)`
 
-Returns a `ResultSuccess<T>`, which is implicitly convertible to a `Result<T, E>` for any E.
+Returns a `ResultOk<T>`, which is implicitly convertible to a `Result<T, E>` for any E.
 
 ### `static ResultError<E> Result.Error<E>(E e)`
 
 Returns a `ResultError<E>`, which is implicitly convertible to a `Result<T, E>` for any T.
 
-### `void Result<T, E>.Handle(Action<T> onSuccess, Action<E> onError)`
+### `void Result<T, E>.Handle(Action<T> onOk, Action<E> onError)`
 
-If the `Result<T, E>` contains a success, then executes `onSuccess` with the success value as the parameter.
+If the `Result<T, E>` contains an ok, then executes `onOk` with the ok value as the parameter.
 If the `Result<T, E>` contains an error, then executes `onError` with the error value as the parameter.
 
-### `R Result<T, E>.Handle<R>(Func<T, R> onSuccess, Func<E, R> onError)`
+### `R Result<T, E>.Handle<R>(Func<T, R> onOk, Func<E, R> onError)`
 
-If the `Result<T, E>` contains a success, then returns the value of `onSuccess` with the success value as the parameter.
+If the `Result<T, E>` contains an ok, then returns the value of `onOk` with the ok value as the parameter.
 If the `Result<T, E>` contains an error, then returns the value of `onError` with the error value as the parameter.
 I use this to return different `IActionResult` subclasses in my ASP.Net Core controllers.
 
-### `bool Result<T, E>.TrySuccess(out T t)`
+### `bool Result<T, E>.TryOk(out T t)`
 
-If this is a Success Result, assigns the success return value to the t parameter.
-Returns true if this is a success result.
+If this is an Ok Result, assigns the ok return value to the t parameter.
+Returns true if this is an ok result.
 
 ### `bool Result<T, E>.TryError(out E e)`
 
@@ -115,7 +115,7 @@ public class Person {
     public static Result<MiddleName, string> GetMiddleName(string fullName) {
         var names = fullName.Split(' ');
         if (names.Length == 3) {
-            return Result.Success<MiddleName>(names[1]);
+            return Result.Ok<MiddleName>(names[1]);
         }
 
         return Result.Error("No middle name.");
@@ -126,7 +126,7 @@ public class Person {
 
         var result = GetMiddleName(Console.ReadLine());
 
-        if (result.TrySuccess(out var middleName)) {
+        if (result.TryOk(out var middleName)) {
             Console.WriteLine($"Your middle name is: {middleName}");
         }
 
@@ -135,12 +135,12 @@ public class Person {
         }
 
         result.Handle(
-            success => Console.WriteLine($"Your middle name is: {success}"),
+            ok => Console.WriteLine($"Your middle name is: {ok}"),
             error => Console.WriteLine(error));
 
         Console.WriteLine(
             result.Handle(
-                success => $"Your middle name is: {success}",
+                ok => $"Your middle name is: {ok}",
                 error => error));
     }
 }

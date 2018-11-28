@@ -7,41 +7,41 @@ using ResultT = Scarp.Result.Result<int, string>;
 namespace Scarp.Result.Tests {
     public class ResultTest {
         [Fact]
-        public void HandleSuccessAction() {
-            var successExpected = Random.Int();
-            ResultT result = Result.Success(successExpected);
+        public void HandleOkAction() {
+            var okExpected = Random.Int();
+            ResultT result = Result.Ok(okExpected);
 
-            int successActual = -1;
+            int okActual = -1;
             string errorExpected = Random.String10();
             string errorActual = null;
-            result.Handle(s => successActual = s, e => errorActual = e);
+            result.Handle(s => okActual = s, e => errorActual = e);
 
-            Assert.Equal(successExpected, successActual);
+            Assert.Equal(okExpected, okActual);
             Assert.Null(errorActual);
         }
 
         [Fact]
         public void HandleErrorAction() {
-            var successExpected = Random.String10();
-            ResultT result = Result.Error(successExpected);
+            var okExpected = Random.String10();
+            ResultT result = Result.Error(okExpected);
 
-            int successActual = -1;
+            int okActual = -1;
             string error = Random.String20();
             string errorActual = null;
-            result.Handle(s => successActual = s, e => errorActual = e);
+            result.Handle(s => okActual = s, e => errorActual = e);
 
-            Assert.Equal(-1, successActual);
-            Assert.Equal(successExpected, errorActual);
+            Assert.Equal(-1, okActual);
+            Assert.Equal(okExpected, errorActual);
         }
 
         [Fact]
-        public void TrySuccess() {
-            var successExpected = Random.Int();
-            ResultT result = Result.Success(successExpected);
+        public void TryOk() {
+            var okExpected = Random.Int();
+            ResultT result = Result.Ok(okExpected);
 
-            var successActual = 0;
-            Assert.True(result.TrySuccess(out successActual));
-            Assert.Equal(successExpected, successActual);
+            var okActual = 0;
+            Assert.True(result.TryOk(out okActual));
+            Assert.Equal(okExpected, okActual);
 
             string errorActual = null;
             Assert.False(result.TryError(out errorActual));
@@ -57,15 +57,15 @@ namespace Scarp.Result.Tests {
             Assert.True(result.TryError(out errorActual));
             Assert.Equal(errorExpected, errorActual);
 
-            int successValue = -1;
-            Assert.False(result.TrySuccess(out successValue));
-            Assert.Equal(default(int), successValue);
+            int okValue = -1;
+            Assert.False(result.TryOk(out okValue));
+            Assert.Equal(default(int), okValue);
         }
 
         [Fact]
-        public void HandleSuccessFunc() {
-            var successExpected = Random.Int();
-            ResultT result = Result.Success(successExpected);
+        public void HandleOkFunc() {
+            var okExpected = Random.Int();
+            ResultT result = Result.Ok(okExpected);
 
             var r = result.Handle(s => 1, e => 0);
 
@@ -74,8 +74,8 @@ namespace Scarp.Result.Tests {
 
         [Fact]
         public void HandleErrorFunc() {
-            var successExpected = Random.String10();
-            ResultT result = Result.Error(successExpected);
+            var okExpected = Random.String10();
+            ResultT result = Result.Error(okExpected);
 
             var r = result.Handle(s => 1, e => 0);
 
@@ -84,9 +84,9 @@ namespace Scarp.Result.Tests {
 
         [Fact]
         public void ToStringTest() {
-            var successExpected = Random.Int();
-            ResultT result = Result.Success(successExpected);
-            Assert.Equal(successExpected.ToString(), result.ToString());
+            var okExpected = Random.Int();
+            ResultT result = Result.Ok(okExpected);
+            Assert.Equal(okExpected.ToString(), result.ToString());
 
             var errorExpected = Random.String10();
             result = Result.Error(errorExpected);
@@ -95,9 +95,9 @@ namespace Scarp.Result.Tests {
 
         [Fact]
         public void GetHashCodeTest() {
-            var successExpected = Random.Int();
-            ResultT result = Result.Success(successExpected);
-            Assert.Equal(successExpected.GetHashCode(), result.GetHashCode());
+            var okExpected = Random.Int();
+            ResultT result = Result.Ok(okExpected);
+            Assert.Equal(okExpected.GetHashCode(), result.GetHashCode());
 
             var errorExpected = Random.String10();
             result = Result.Error(errorExpected);
@@ -106,18 +106,18 @@ namespace Scarp.Result.Tests {
 
         [Fact]
         public void Equality() {
-            var successExpected = Random.Int();
+            var okExpected = Random.Int();
 
-            ResultT lhs = Result.Success(successExpected);
+            ResultT lhs = Result.Ok(okExpected);
             Assert.False(lhs.Equals(new object()));
 
-            ResultT rhsRight = Result.Success(successExpected);
+            ResultT rhsRight = Result.Ok(okExpected);
             object rhsRightObject = rhsRight;
             Assert.True(lhs.Equals(rhsRight));
             Assert.True(lhs.Equals(rhsRightObject));
             Assert.True(lhs == rhsRight);
 
-            ResultT rhsWrong = Result.Success(successExpected + 1);
+            ResultT rhsWrong = Result.Ok(okExpected + 1);
             object rhsWrongObject = rhsWrong;
             Assert.False(lhs.Equals(rhsWrong));
             Assert.False(lhs.Equals(rhsWrongObject));
@@ -142,12 +142,12 @@ namespace Scarp.Result.Tests {
 
         [Fact]
         public void NullEquality() {
-            Result<string, string> lhs = Result.Success<string>(null);
-            Result<string, string> rhs = Result.Success<string>(null);
+            Result<string, string> lhs = Result.Ok<string>(null);
+            Result<string, string> rhs = Result.Ok<string>(null);
             Assert.Equal(lhs, rhs);
             Assert.Equal(rhs, lhs);
 
-            rhs = Result.Success<string>(Random.String10());
+            rhs = Result.Ok<string>(Random.String10());
             Assert.NotEqual(lhs, rhs);
             Assert.NotEqual(rhs, lhs);
 

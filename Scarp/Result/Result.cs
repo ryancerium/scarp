@@ -2,13 +2,13 @@ using System;
 
 namespace Scarp.Result {
     /// <summary>
-    /// Static class with methods for creating ResultSuccess and ResultError values.
+    /// Static class with methods for creating ResultOk and ResultError values.
     /// </summary>
     public static class Result {
         /// <summary>
-        /// Uses type inference to make a ResultSuccess&lt;T&gt;
+        /// Uses type inference to make a ResultOk&lt;T&gt;
         /// </summary>
-        public static ResultSuccess<T> Success<T>(T t) => new ResultSuccess<T>(t);
+        public static ResultOk<T> Ok<T>(T t) => new ResultOk<T>(t);
 
         /// <summary>
         /// Uses type inference to make a ResultError&lt;E&gt;
@@ -17,50 +17,50 @@ namespace Scarp.Result {
     }
 
     /// <summary>
-    /// Represents either a successful return value or a failed error value.
+    /// Represents either an ok return value or a failed error value.
     /// </summary>
-    /// <typeparam name="T">Success return type</typeparam>
+    /// <typeparam name="T">Ok return type</typeparam>
     /// <typeparam name="E">Failure error type</typeparam>
     public struct Result<T, E> : IEquatable<Result<T, E>> {
-        private T SuccessValue { get; }
+        private T OkValue { get; }
 
         private E ErrorValue { get; }
 
-        private bool IsSuccess { get; }
+        private bool IsOk { get; }
 
-        private bool IsError => !IsSuccess;
+        private bool IsError => !IsOk;
 
         /// <summary>
-        /// Converts the ResultSuccess<T> to a Successful Result<T, E>
+        /// Converts the ResultOk<T> to an Ok Result<T, E>
         /// </summary>
-        /// <param name="success">A ResultSuccess with the successful return value</param>
-        /// <returns>A Success Result</returns>
-        public static implicit operator Result<T, E>(ResultSuccess<T> success) =>
-            new Result<T, E>(success.Value, default(E), true);
+        /// <param name="ok">A ResultOk<T> with the ok return value</param>
+        /// <returns>An Ok Result</returns>
+        public static implicit operator Result<T, E>(ResultOk<T> ok) =>
+            new Result<T, E>(ok.Value, default(E), true);
 
         /// <summary>
         /// Converts the ResultError<E> to an Error Result<T, E>
         /// </summary>
-        /// <param name="success">A ResultError with the error value</param>
+        /// <param name="ok">A ResultError with the error value</param>
         /// <returns>An Error Result</returns>
         public static implicit operator Result<T, E>(ResultError<E> error) =>
             new Result<T, E>(default(T), error.Value, false);
 
-        private Result(T t, E e, bool success) {
-            SuccessValue = t;
+        private Result(T t, E e, bool ok) {
+            OkValue = t;
             ErrorValue = e;
-            IsSuccess = success;
+            IsOk = ok;
         }
 
         /// <summary>
-        /// If this is a Success Result, assigns the success return value to the t parameter.
+        /// If this is an Ok Result, assigns the ok return value to the t parameter.
         /// </summary>
-        /// <param name="t">A reference to a variable to hold the success return value</param>
-        /// <returns>true if this is a Success Result, false otherwise</returns>
-        public bool TrySuccess(out T t) {
-            t = IsSuccess ? SuccessValue : default(T);
+        /// <param name="t">A reference to a variable to hold the ok return value</param>
+        /// <returns>true if this is an Ok Result, false otherwise</returns>
+        public bool TryOk(out T t) {
+            t = IsOk ? OkValue : default(T);
 
-            return IsSuccess;
+            return IsOk;
         }
 
         /// <summary>
@@ -75,18 +75,18 @@ namespace Scarp.Result {
         }
 
         /// <summary>
-        /// If this is a Success Result, invokes onSuccess() with the return value.
+        /// If this is an Ok Result, invokes onOk() with the return value.
         /// If this is an Error Result, invokes onError() with the error value.
         ///
         /// Both handlers must return something convertible to type R
         /// </summary>
-        /// <param name="onSuccess">Invoked with the return value if this is a Success Result</param>
+        /// <param name="onOk">Invoked with the return value if this is an Ok Result</param>
         /// <param name="onError">Invoked with the error if this is an Error Result</param>
         /// <typeparam name="R">The type returned by the handler functions</typeparam>
         /// <returns>The result of the handler invocation</returns>
-        public R Handle<R>(Func<T, R> onSuccess, Func<E, R> onError) {
-            if (TrySuccess(out var success)) {
-                return onSuccess(success);
+        public R Handle<R>(Func<T, R> onOk, Func<E, R> onError) {
+            if (TryOk(out var ok)) {
+                return onOk(ok);
             }
 
             if (TryError(out var error)) {
@@ -97,18 +97,18 @@ namespace Scarp.Result {
         }
 
         /// <summary>
-        /// If this is a Success Result, invokes onSuccess() with the return value.
+        /// If this is an Ok Result, invokes onOk() with the return value.
         /// If this is an Error Result, invokes onError() with the error value.
         ///
         /// Both handlers must return something convertible to type R
         /// </summary>
-        /// <param name="onSuccess">Invoked with the return value if this is a Success Result</param>
+        /// <param name="onOk">Invoked with the return value if this is an Ok Result</param>
         /// <param name="onError">Invoked with the error if this is an Error Result</param>
         /// <typeparam name="R">The type returned by the handler functions</typeparam>
         /// <returns>The result of the handler invocation</returns>
-        public void Handle(Action<T> onSuccess, Action<E> onError) {
-            if (TrySuccess(out var success)) {
-                onSuccess(success);
+        public void Handle(Action<T> onOk, Action<E> onError) {
+            if (TryOk(out var ok)) {
+                onOk(ok);
                 return;
             }
 
@@ -120,23 +120,23 @@ namespace Scarp.Result {
             throw new InvalidOperationException("Tried to handle a Result type with no value.");
         }
 
-        public override string ToString() => IsSuccess ? SuccessValue.ToString() : ErrorValue.ToString();
+        public override string ToString() => IsOk ? OkValue.ToString() : ErrorValue.ToString();
 
-        public override int GetHashCode() => IsSuccess ? SuccessValue.GetHashCode() : ErrorValue.GetHashCode();
+        public override int GetHashCode() => IsOk ? OkValue.GetHashCode() : ErrorValue.GetHashCode();
 
         public override bool Equals(object other) => other is Result<T, E> result && Equals(result);
 
         public bool Equals(Result<T, E> other) {
-            if (IsSuccess && other.IsSuccess) {
-                if (object.ReferenceEquals(SuccessValue, other.SuccessValue)) {
+            if (IsOk && other.IsOk) {
+                if (object.ReferenceEquals(OkValue, other.OkValue)) {
                     return true;
                 }
 
-                if (SuccessValue == null || other.SuccessValue == null) {
+                if (OkValue == null || other.OkValue == null) {
                     return false;
                 }
 
-                return SuccessValue.Equals(other.SuccessValue);
+                return OkValue.Equals(other.OkValue);
             }
 
             if (IsError && other.IsError) {
