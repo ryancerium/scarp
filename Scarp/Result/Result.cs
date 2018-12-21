@@ -120,6 +120,15 @@ namespace Scarp.Result {
             throw new InvalidOperationException("Tried to handle a Result type with no value.");
         }
 
+        /// <summary>
+        /// If this is an Ok Result, invokes onOk() with the return value.
+        /// If this is an Error Result, propagates the error value.
+        /// </summary>
+        /// <param name="onOk">Invoked with the return value if this is an Ok Result</param>
+        /// <typeparam name="R">The type returned by the handler function</typeparam>
+        /// <returns>A Result<R, E> from invoking onOk() or propagating the error value</returns>
+        public Result<R, E> Bind<R>(Func<T, Result<R, E>> onOk) => Handle(onOk, e => Result.Error(e));
+
         public override string ToString() => IsOk ? OkValue.ToString() : ErrorValue.ToString();
 
         public override int GetHashCode() => IsOk ? OkValue.GetHashCode() : ErrorValue.GetHashCode();

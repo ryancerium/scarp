@@ -14,7 +14,7 @@ namespace Scarp.Result.Tests {
             int okActual = -1;
             string errorExpected = Random.String10();
             string errorActual = null;
-            result.Handle(s => okActual = s, e => errorActual = e);
+            result.Handle(ok => okActual = ok, e => errorActual = e);
 
             Assert.Equal(okExpected, okActual);
             Assert.Null(errorActual);
@@ -28,7 +28,7 @@ namespace Scarp.Result.Tests {
             int okActual = -1;
             string error = Random.String20();
             string errorActual = null;
-            result.Handle(s => okActual = s, e => errorActual = e);
+            result.Handle(ok => okActual = ok, e => errorActual = e);
 
             Assert.Equal(-1, okActual);
             Assert.Equal(okExpected, errorActual);
@@ -67,7 +67,7 @@ namespace Scarp.Result.Tests {
             var okExpected = Random.Int();
             ResultT result = Result.Ok(okExpected);
 
-            var r = result.Handle(s => 1, e => 0);
+            var r = result.Handle(ok => 1, e => 0);
 
             Assert.Equal(1, r);
         }
@@ -77,9 +77,82 @@ namespace Scarp.Result.Tests {
             var okExpected = Random.String10();
             ResultT result = Result.Error(okExpected);
 
-            var r = result.Handle(s => 1, e => 0);
+            var r = result.Handle(ok => 1, e => 0);
 
             Assert.Equal(0, r);
+        }
+
+        [Fact]
+        public void BindOk() {
+            var okExpected = Random.Int();
+            ResultT result = Result.Ok(okExpected);
+
+            var bindResult = result.Bind<string>(ok => Result.Ok((ok + 1).ToString()))
+                .Bind(ok => Result.Ok(ok + " hello world!"));
+
+            string okActual = "";
+            Assert.True(bindResult.TryOk(out okActual));
+
+            string errorActual = "";
+            Assert.False(bindResult.TryError(out errorActual));
+
+            Assert.Equal((okExpected + 1).ToString() + " hello world!", okActual);
+            Assert.Equal(default(string), errorActual);
+        }
+
+        [Fact]
+        public void BindError() {
+            var errorExpected = Random.String10();
+            ResultT result = Result.Error(errorExpected);
+
+            var bindResult = result.Bind<string>(ok => Result.Ok((ok + 1).ToString()));
+
+            string okActual = "";
+            Assert.False(bindResult.TryOk(out okActual));
+
+            string errorActual = "";
+            Assert.Equal(default(string), okActual);
+
+            Assert.True(bindResult.TryError(out errorActual));
+            Assert.Equal(errorExpected, errorActual);
+        }
+
+        [Fact]
+        public void Map() {
+            var okExpected = Random.Int();
+            ResultT result = Result.Ok(okExpected);
+
+            var actual = result.Map(ok => ok.ToString());
+            string okActual = null;
+            Assert.True(actual.TryOk(out okActual));
+            Assert.Equal(okExpected.ToString(), okActual);
+
+            var errorExpected = Random.String10();
+            result = Result.Error(errorExpected);
+
+            actual = result.Map(ok => ok.ToString());
+            string errorActual = null;
+            Assert.True(actual.TryError(out errorActual));
+            Assert.Equal(errorExpected, errorActual);
+        }
+
+        [Fact]
+        public void MapError() {
+            var okExpected = Random.Int();
+            ResultT result = Result.Ok(okExpected);
+
+            var actual = result.MapError(error => int.Parse(error));
+            int okActual = 0;
+            Assert.True(actual.TryOk(out okActual));
+            Assert.Equal(okExpected, okActual);
+
+            var errorExpected = Random.Int();
+            result = Result.Error(errorExpected.ToString());
+
+            actual = result.MapError(error => int.Parse(error));
+            int errorActual = 0;
+            Assert.True(actual.TryError(out errorActual));
+            Assert.Equal(errorExpected, errorActual);
         }
 
         [Fact]
