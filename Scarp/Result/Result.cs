@@ -11,6 +11,12 @@ namespace Scarp.Result {
         public static ResultOk<T> Ok<T>(T t) => new ResultOk<T>(t);
 
         /// <summary>
+        /// Obsoleted alias for Result.Ok().
+        /// </summary>
+        [Obsolete("Call Result.Ok() instead.")]
+        public static ResultOk<T> Success<T>(T t) => new ResultOk<T>(t);
+
+        /// <summary>
         /// Uses type inference to make a ResultError&lt;E&gt;
         /// </summary>
         public static ResultError<E> Error<E>(E e) => new ResultError<E>(e);
@@ -62,6 +68,12 @@ namespace Scarp.Result {
 
             return IsOk;
         }
+
+        /// <summary>
+        /// Obsoleted alias for Result.TryOk().
+        /// </summary>
+        [Obsolete("Call Result.TryOk() instead.")]
+        public bool TrySuccess(out T t) => TryOk(out t);
 
         /// <summary>
         /// If this is an Error Result, assigns the error value to the e parameter.
