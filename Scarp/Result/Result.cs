@@ -109,6 +109,20 @@ namespace Scarp.Result {
         }
 
         /// <summary>
+        /// JavaScript-like alias for Handle().
+        ///
+        /// If this is an Ok Result, invokes onOk() with the return value.
+        /// If this is an Error Result, invokes onError() with the error value.
+        ///
+        /// Both handlers must return something convertible to type R
+        /// </summary>
+        /// <param name="onOk">Invoked with the return value if this is an Ok Result</param>
+        /// <param name="onError">Invoked with the error if this is an Error Result</param>
+        /// <typeparam name="R">The type returned by the handler functions</typeparam>
+        /// <returns>The result of the handler invocation</returns>
+        public R Then<R>(Func<T, R> onOk, Func<E, R> onError) => Handle(onOk, onError);
+
+        /// <summary>
         /// If this is an Ok Result, invokes onOk() with the return value.
         /// If this is an Error Result, invokes onError() with the error value.
         ///
@@ -133,6 +147,20 @@ namespace Scarp.Result {
         }
 
         /// <summary>
+        /// JavaScript-like alias for Handle().
+        ///
+        /// If this is an Ok Result, invokes onOk() with the return value.
+        /// If this is an Error Result, invokes onError() with the error value.
+        ///
+        /// Both handlers must return something convertible to type R
+        /// </summary>
+        /// <param name="onOk">Invoked with the return value if this is an Ok Result</param>
+        /// <param name="onError">Invoked with the error if this is an Error Result</param>
+        /// <typeparam name="R">The type returned by the handler functions</typeparam>
+        /// <returns>The result of the handler invocation</returns>
+        public void Then(Action<T> onOk, Action<E> onError) => Handle(onOk, onError);
+
+        /// <summary>
         /// If this is an Ok Result, invokes onOk() with the return value.
         /// If this is an Error Result, propagates the error value.
         /// </summary>
@@ -140,6 +168,18 @@ namespace Scarp.Result {
         /// <typeparam name="R">The type returned by the handler function</typeparam>
         /// <returns>A Result<R, E> from invoking onOk() or propagating the error value</returns>
         public Result<R, E> Bind<R>(Func<T, Result<R, E>> onOk) => Handle(onOk, e => Result.Error(e));
+
+        /// <summary>
+        /// JavaScript-like alias for Bind().
+        ///
+        /// If this is an Ok Result, invokes onOk() with the return value.
+        /// If this is an Error Result, propagates the error value.
+        /// </summary>
+        /// <param name="onOk">Invoked with the return value if this is an Ok Result</param>
+        /// <typeparam name="R">The type returned by the handler function</typeparam>
+        /// <returns>A Result<R, E> from invoking onOk() or propagating the error value</returns>
+
+        public Result<R, E> Then<R>(Func<T, Result<R, E>> onOk) => Bind(onOk);
 
         public override string ToString() => IsOk ? OkValue.ToString() : ErrorValue.ToString();
 
