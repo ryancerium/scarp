@@ -6,9 +6,7 @@ namespace Scarp.Primitive {
     public struct Decimal<Tag> : IComparable, IComparable<Decimal<Tag>>, IEquatable<Decimal<Tag>>, IFormattable {
         public Decimal(decimal value) => Value = value;
 
-        public decimal Value {
-            get; private set;
-        }
+        public decimal Value { get; private set; }
 
         public override string ToString() => Value.ToString();
 

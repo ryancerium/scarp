@@ -6,9 +6,7 @@ namespace Scarp.Primitive {
     public struct Long<Tag> : IComparable, IComparable<Long<Tag>>, IEquatable<Long<Tag>>, IFormattable {
         public Long(long value) => Value = value;
 
-        public long Value {
-            get; private set;
-        }
+        public long Value { get; private set; }
 
         public override string ToString() => Value.ToString();
 

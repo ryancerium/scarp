@@ -6,9 +6,7 @@ namespace Scarp.Primitive {
     public struct ULong<Tag> : IComparable, IComparable<ULong<Tag>>, IEquatable<ULong<Tag>>, IFormattable {
         public ULong(ulong value) => Value = value;
 
-        public ulong Value {
-            get; private set;
-        }
+        public ulong Value { get; private set; }
 
         public override string ToString() => Value.ToString();
 

@@ -6,9 +6,7 @@ namespace Scarp.Primitive {
     public struct Int<Tag> : IComparable, IComparable<Int<Tag>>, IEquatable<Int<Tag>>, IFormattable {
         public Int(int value) => Value = value;
 
-        public int Value {
-            get; private set;
-        }
+        public int Value { get; private set; }
 
         public override string ToString() => Value.ToString();
 
