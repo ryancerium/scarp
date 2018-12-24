@@ -11,29 +11,37 @@ namespace PrimitiveGenerator {
 
         private static string Value { get; } = "Hello";
         static void Main(string[] args) {
-            var primitive = new PrimitiveGenerator();
-            foreach (var arg in args) {
-                if (arg == "efcore") {
-                    primitive.GenerateValueConverters();
-                } else if (arg == "primitive") {
-                    primitive.GenerateClass("UInt", Unsigned);
-                    primitive.GenerateClass("ULong", Unsigned);
-                    primitive.GenerateClass("Int", Signed);
-                    primitive.GenerateClass("Long", Signed);
-                    primitive.GenerateClass("Decimal", FloatingPoint);
-                    primitive.GenerateClass("Double", FloatingPoint);
-                    primitive.GenerateClass("Float", FloatingPoint);
+            var all = args.Length == 0 || args.Contains("all");
+            var generateEfcore = all || args.Contains("efcore");
+            var generatePrimitive = all || args.Contains("primitive");
+            var generateString = all || args.Contains("string");
 
-                    primitive.GenerateTests("UInt", UnsignedTest);
-                    primitive.GenerateTests("ULong", UnsignedTest);
-                    primitive.GenerateTests("Int", SignedTest);
-                    primitive.GenerateTests("Long", SignedTest);
-                    primitive.GenerateTests("Decimal", FloatingPointTest);
-                    primitive.GenerateTests("Double", FloatingPointTest);
-                    primitive.GenerateTests("Float", FloatingPointTest);
-                } else if (arg == "string") {
-                    primitive.GenerateString();
-                }
+            var primitive = new PrimitiveGenerator();
+
+            if (generateEfcore) {
+                primitive.GenerateValueConverters();
+            }
+
+            if (generatePrimitive) {
+                primitive.GenerateClass("UInt", Unsigned);
+                primitive.GenerateClass("ULong", Unsigned);
+                primitive.GenerateClass("Int", Signed);
+                primitive.GenerateClass("Long", Signed);
+                primitive.GenerateClass("Decimal", FloatingPoint);
+                primitive.GenerateClass("Double", FloatingPoint);
+                primitive.GenerateClass("Float", FloatingPoint);
+
+                primitive.GenerateTests("UInt", UnsignedTest);
+                primitive.GenerateTests("ULong", UnsignedTest);
+                primitive.GenerateTests("Int", SignedTest);
+                primitive.GenerateTests("Long", SignedTest);
+                primitive.GenerateTests("Decimal", FloatingPointTest);
+                primitive.GenerateTests("Double", FloatingPointTest);
+                primitive.GenerateTests("Float", FloatingPointTest);
+            }
+
+            if (generateString) {
+                primitive.GenerateString();
             }
         }
 
