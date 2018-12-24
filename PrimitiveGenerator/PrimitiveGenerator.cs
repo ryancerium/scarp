@@ -73,8 +73,16 @@ namespace Scarp.EntityFrameworkCore.Storage.ValueConversion {");
     public class PrimitiveClassValueConverter<Tag> : ValueConverter<PrimitiveClass<Tag>, PrimitiveType> {
         public PrimitiveClassValueConverter(ConverterMappingHints mappingHints = null)
             : base(e => e.Value, e => new PrimitiveClass<Tag>(e), mappingHints) { }
+    }
+
+    public class NullablePrimitiveClassValueConverter<Tag> : ValueConverter<PrimitiveClass<Tag>?, PrimitiveType?> {
+        public NullablePrimitiveClassValueConverter(ConverterMappingHints mappingHints = null)
+            : base(
+                e => e.HasValue ? e.Value.Value : (PrimitiveType?) null,
+                e => e.HasValue ? new PrimitiveClass<Tag>(e.Value) : (PrimitiveClass<Tag>?) null,
+                mappingHints) { }
     }".Replace(PrimitiveClass, type)
-       .Replace(PrimitiveType, type.ToLower()))));
+        .Replace(PrimitiveType, type.ToLower()))));
 
                 streamWriter.Write(@"
 }");
