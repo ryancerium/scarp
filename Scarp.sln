@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrimitiveGenerator", "Primi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{87F4290D-44AF-46B9-924D-049D8EE55C6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFrameworkCore", "EntityFrameworkCore\EntityFrameworkCore.csproj", "{DD1DC774-3542-460F-9514-7245C7A9AF37}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scarp.EntityFrameworkCore", "Scarp.EntityFrameworkCore\Scarp.EntityFrameworkCore.csproj", "{DD1DC774-3542-460F-9514-7245C7A9AF37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
