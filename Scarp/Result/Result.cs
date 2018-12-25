@@ -178,8 +178,32 @@ namespace Scarp.Result {
         /// <param name="onOk">Invoked with the return value if this is an Ok Result</param>
         /// <typeparam name="R">The type returned by the handler function</typeparam>
         /// <returns>A Result<R, E> from invoking onOk() or propagating the error value</returns>
-
         public Result<R, E> Then<R>(Func<T, Result<R, E>> onOk) => Bind(onOk);
+
+
+        /// <summary>
+        /// Maps a successful Ok Result to a new type, R.
+        /// Propagates an Error Result's value.
+        /// </summary>
+        /// <param name="onOk">Invoked with the return value if this is an Ok Result</param>
+        /// <typeparam name="R">The return type of onOk</typeparam>
+        /// <returns>A Result<R, E> from invoking onOk() or propagating the error value</returns>
+        public Result<R, E> Map<R>(Func<T, R> onOk) =>
+            Handle<Result<R, E>>(
+                ok => Result.Ok(onOk(ok)),
+                e => Result.Error(e));
+
+        /// <summary>
+        /// Maps an Error Result to a new type, E2.
+        /// Propagates an Ok Result's value.
+        /// </summary>
+        /// <param name="onError">Invoked with the error value if this is an Error Result</param>
+        /// <typeparam name="E2">The return type of onError</typeparam>
+        /// <returns>A Result<T, E2> from propagating the Ok value or invoking onError()</returns>
+        public Result<T, E2> MapError<E2>(Func<E, E2> onError) =>
+            Handle<Result<T, E2>>(
+                ok => Result.Ok(ok),
+                error => Result.Error(onError(error)));
 
         public override string ToString() => IsOk ? OkValue.ToString() : ErrorValue.ToString();
 
