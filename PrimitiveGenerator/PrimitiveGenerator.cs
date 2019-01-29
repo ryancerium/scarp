@@ -11,7 +11,11 @@ namespace PrimitiveGenerator {
 
         private static string Value { get; } = "Hello";
         static void Main(string[] args) {
-            var all = args.Length == 0 || args.Contains("all");
+            if (args.Length == 0 || args.Contains("--help") || args.Contains("-h") || args.Contains("/?")) {
+                Console.WriteLine(@"Usage: PrimitiveGenerator [all] [efcore] [primitive] [string] [--help|-h|/?]");
+            }
+
+            var all = args.Contains("all");
             var generateEfcore = all || args.Contains("efcore");
             var generatePrimitive = all || args.Contains("primitive");
             var generateString = all || args.Contains("string");
