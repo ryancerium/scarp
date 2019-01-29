@@ -92,4 +92,17 @@ namespace Scarp.EntityFrameworkCore.Storage.ValueConversion {
                 e => e.HasValue ? new Decimal<Tag>(e.Value) : (Decimal<Tag>?) null,
                 mappingHints) { }
     }
+
+    public class StringValueConverter<Tag> : ValueConverter<String<Tag>, string> {
+        public StringValueConverter(ConverterMappingHints mappingHints = null)
+            : base(e => e.Value, e => new String<Tag>(e), mappingHints) { }
+    }
+
+    public class NullableStringValueConverter<Tag> : ValueConverter<String<Tag>?, string> {
+        public NullableStringValueConverter(ConverterMappingHints mappingHints = null)
+            : base(
+                e => e.HasValue ? e.Value.Value : null,
+                e => new String<Tag>(e),
+                mappingHints) { }
+    }
 }
