@@ -1,6 +1,6 @@
 using System;
 
-namespace Scarp.Result {
+namespace Scarp.Results {
     public static class ResultExt {
         /// <summary>
         /// If this is an Ok Result, invokes onOk() with the return value.

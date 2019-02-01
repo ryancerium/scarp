@@ -1,10 +1,10 @@
-using Scarp.Result;
+using Scarp.Results;
 using Scarp.Tests;
 using Xunit;
 
-using ResultT = Scarp.Result.Result<int, string>;
+using ResultT = Scarp.Results.Result<int, string>;
 
-namespace Scarp.Result.Tests {
+namespace Scarp.Results.Tests {
     public class ResultTest {
         [Fact]
         public void HandleOkAction() {

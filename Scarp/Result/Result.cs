@@ -1,6 +1,6 @@
 using System;
 
-namespace Scarp.Result {
+namespace Scarp.Results {
     /// <summary>
     /// Static class with methods for creating ResultOk and ResultError values.
     /// </summary>

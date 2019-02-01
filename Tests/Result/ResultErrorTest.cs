@@ -1,8 +1,8 @@
-using Scarp.Result;
+using Scarp.Results;
 using Scarp.Tests;
 using Xunit;
 
-namespace Scarp.Result.Tests {
+namespace Scarp.Results.Tests {
     public class ResultErrorTest {
         [Fact]
         public void ResultError() {

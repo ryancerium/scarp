@@ -1,6 +1,6 @@
 using System;
 
-namespace Scarp.Result {
+namespace Scarp.Results {
     /// <summary>
     /// Contains an ok return value.
     /// Is implicitly convertible to a Result&lt;T, E&gt; for any E.
