@@ -12,15 +12,20 @@ namespace PrimitiveGenerator {
         private static string Value { get; } = "Hello";
         static void Main(string[] args) {
             if (args.Length == 0 || args.Contains("--help") || args.Contains("-h") || args.Contains("/?")) {
-                Console.WriteLine(@"Usage: PrimitiveGenerator [all] [efcore] [primitive] [string] [--help|-h|/?]");
+                Console.WriteLine(@"Usage: PrimitiveGenerator [all] [aspnetcore] [efcore] [primitive] [string] [--help|-h|/?]");
             }
 
             var all = args.Contains("all");
+            var generateAspNetCore = all || args.Contains("aspnetcore");
             var generateEfcore = all || args.Contains("efcore");
             var generatePrimitive = all || args.Contains("primitive");
             var generateString = all || args.Contains("string");
 
             var primitive = new PrimitiveGenerator();
+
+            if (generateAspNetCore) {
+                primitive.GenerateAspModels();
+            }
 
             if (generateEfcore) {
                 primitive.GenerateValueConverters();
@@ -71,6 +76,37 @@ namespace PrimitiveGenerator {
             }
         }
 
+        private void GenerateAspModels() {
+            using (var streamWriter = new StreamWriter(File.Create("../Scarp.AspNetCore/ScarpModels.cs"))) {
+                streamWriter.Write(@"using Microsoft.AspNetCore.Mvc;
+using Scarp.Primitive;
+
+namespace Scarp.AspNetCore {");
+
+                streamWriter.Write(string.Join("\n",
+                    new[] { "Int", "UInt", "Long", "ULong", "Float", "Double", "Decimal" }.Select(type =>
+                        @"
+    [ModelBinder(BinderType = typeof(ScarpModelBinder))]
+    public class AspPrimitiveClass<Tag> {
+        public PrimitiveClass<Tag> Value { get; private set; }
+
+        public AspPrimitiveClass(string value) => Value = new PrimitiveClass<Tag>(PrimitiveType.Parse(value));
+    }"
+                        .Replace(PrimitiveClass, type)
+                        .Replace(PrimitiveType, type.ToLower()))));
+
+                streamWriter.Write(@"
+
+    [ModelBinder(BinderType = typeof(ScarpModelBinder))]
+    public class AspString<Tag> {
+        public String<Tag> Value { get; private set; }
+
+        public AspString(string value) => Value = new String<Tag>(value);
+    }
+}");
+            }
+        }
+
         private void GenerateValueConverters() {
             using (var streamWriter = new StreamWriter(File.Create("../Scarp.EntityFrameworkCore/ScarpValueConverters.cs"))) {
                 streamWriter.Write(@"using Scarp.Primitive;
@@ -78,10 +114,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Scarp.EntityFrameworkCore.Storage.ValueConversion {");
 
-                streamWriter.Write(string.Join(@"
-",
-                new[] { "Int", "UInt", "Long", "ULong", "Float", "Double", "Decimal" }.Select(type =>
-                     @"
+                streamWriter.Write(string.Join("\n",
+                    new[] { "Int", "UInt", "Long", "ULong", "Float", "Double", "Decimal" }.Select(type =>
+                        @"
     public class PrimitiveClassValueConverter<Tag> : ValueConverter<PrimitiveClass<Tag>, PrimitiveType> {
         public PrimitiveClassValueConverter(ConverterMappingHints mappingHints = null)
             : base(e => e.Value, e => new PrimitiveClass<Tag>(e), mappingHints) { }
@@ -93,8 +128,9 @@ namespace Scarp.EntityFrameworkCore.Storage.ValueConversion {");
                 e => e.HasValue ? e.Value.Value : (PrimitiveType?) null,
                 e => e.HasValue ? new PrimitiveClass<Tag>(e.Value) : (PrimitiveClass<Tag>?) null,
                 mappingHints) { }
-    }".Replace(PrimitiveClass, type)
-        .Replace(PrimitiveType, type.ToLower()))));
+    }"
+                        .Replace(PrimitiveClass, type)
+                        .Replace(PrimitiveType, type.ToLower()))));
 
                 streamWriter.Write(@"
 

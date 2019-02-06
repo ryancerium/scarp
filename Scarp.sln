@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scarp.EntityFrameworkCore", "Scarp.EntityFrameworkCore\Scarp.EntityFrameworkCore.csproj", "{DD1DC774-3542-460F-9514-7245C7A9AF37}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scarp.AspNetCore", "Scarp.AspNetCore\Scarp.AspNetCore.csproj", "{41E76DFE-ABE6-4763-AC8B-5E22A732CDE7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,5 +74,17 @@ Global
 		{DD1DC774-3542-460F-9514-7245C7A9AF37}.Release|x64.Build.0 = Release|Any CPU
 		{DD1DC774-3542-460F-9514-7245C7A9AF37}.Release|x86.ActiveCfg = Release|Any CPU
 		{DD1DC774-3542-460F-9514-7245C7A9AF37}.Release|x86.Build.0 = Release|Any CPU
+		{41E76DFE-ABE6-4763-AC8B-5E22A732CDE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41E76DFE-ABE6-4763-AC8B-5E22A732CDE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41E76DFE-ABE6-4763-AC8B-5E22A732CDE7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{41E76DFE-ABE6-4763-AC8B-5E22A732CDE7}.Debug|x64.Build.0 = Debug|Any CPU
+		{41E76DFE-ABE6-4763-AC8B-5E22A732CDE7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{41E76DFE-ABE6-4763-AC8B-5E22A732CDE7}.Debug|x86.Build.0 = Debug|Any CPU
+		{41E76DFE-ABE6-4763-AC8B-5E22A732CDE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41E76DFE-ABE6-4763-AC8B-5E22A732CDE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41E76DFE-ABE6-4763-AC8B-5E22A732CDE7}.Release|x64.ActiveCfg = Release|Any CPU
+		{41E76DFE-ABE6-4763-AC8B-5E22A732CDE7}.Release|x64.Build.0 = Release|Any CPU
+		{41E76DFE-ABE6-4763-AC8B-5E22A732CDE7}.Release|x86.ActiveCfg = Release|Any CPU
+		{41E76DFE-ABE6-4763-AC8B-5E22A732CDE7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
