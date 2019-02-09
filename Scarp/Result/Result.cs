@@ -6,27 +6,27 @@ namespace Scarp.Results {
     /// </summary>
     public static class Result {
         /// <summary>
-        /// Uses type inference to make a ResultOk&lt;T&gt;
+        /// Creates a <c>ResultOk&lt;T&gt;</c>, which is implicitly convertible to a <c>Result&lt;T, E&gt;</c> for any <c>E</c>.
         /// </summary>
         public static ResultOk<T> Ok<T>(T t) => new ResultOk<T>(t);
 
         /// <summary>
         /// Obsoleted alias for Result.Ok().
         /// </summary>
-        [Obsolete("Call Result.Ok() instead.")]
+        [Obsolete("Call Result.Ok() instead.", true)]
         public static ResultOk<T> Success<T>(T t) => new ResultOk<T>(t);
 
         /// <summary>
-        /// Uses type inference to make a ResultError&lt;E&gt;
+        /// Creates a <c>ResultError&lt;T&gt;</c>, which is implicitly convertible to a <c>Result&lt;T, E&gt;</c> for any <c>T</c>.
         /// </summary>
         public static ResultError<E> Error<E>(E e) => new ResultError<E>(e);
     }
 
     /// <summary>
-    /// Represents either an ok return value or a failed error value.
+    /// Represents either an Ok value or an Error value.
     /// </summary>
-    /// <typeparam name="T">Ok return type</typeparam>
-    /// <typeparam name="E">Failure error type</typeparam>
+    /// <typeparam name="T">Ok type</typeparam>
+    /// <typeparam name="E">Error type</typeparam>
     public struct Result<T, E> : IEquatable<Result<T, E>> {
         private T OkValue { get; }
 
@@ -37,18 +37,16 @@ namespace Scarp.Results {
         private bool IsError => !IsOk;
 
         /// <summary>
-        /// Converts the ResultOk<T> to an Ok Result<T, E>
+        /// Converts the <c>ResultOk&lt;T&gt;</c> to a <c>Result&lt;T, E&gt;</c> with an Ok value.
         /// </summary>
-        /// <param name="ok">A ResultOk<T> with the ok return value</param>
-        /// <returns>An Ok Result</returns>
+        /// <param name="ok">A <c>ResultOk&lt;T&gt;</c> with the Ok value</param>
         public static implicit operator Result<T, E>(ResultOk<T> ok) =>
             new Result<T, E>(ok.Value, default(E), true);
 
         /// <summary>
-        /// Converts the ResultError<E> to an Error Result<T, E>
+        /// Converts the <c>ResultError&lt;E&gt;</c> to an Error Result&lt;T, E&gt;
         /// </summary>
-        /// <param name="ok">A ResultError with the error value</param>
-        /// <returns>An Error Result</returns>
+        /// <param name="ok">A <c>ResultError&lt;E&gt;</c> with the Error value</param>
         public static implicit operator Result<T, E>(ResultError<E> error) =>
             new Result<T, E>(default(T), error.Value, false);
 
@@ -59,10 +57,10 @@ namespace Scarp.Results {
         }
 
         /// <summary>
-        /// If this is an Ok Result, assigns the ok return value to the t parameter.
+        /// If this is an Ok value, assigns the Ok value to the <paramref name="t"/> parameter.
         /// </summary>
-        /// <param name="t">A reference to a variable to hold the ok return value</param>
-        /// <returns>true if this is an Ok Result, false otherwise</returns>
+        /// <param name="t">A reference to a variable to hold the Ok value</param>
+        /// <returns>true if this is an Ok value, false otherwise</returns>
         public bool TryOk(out T t) {
             t = IsOk ? OkValue : default(T);
 
@@ -72,14 +70,14 @@ namespace Scarp.Results {
         /// <summary>
         /// Obsoleted alias for Result.TryOk().
         /// </summary>
-        [Obsolete("Call Result.TryOk() instead.")]
+        [Obsolete("Call Result.TryOk() instead.", true)]
         public bool TrySuccess(out T t) => TryOk(out t);
 
         /// <summary>
-        /// If this is an Error Result, assigns the error value to the e parameter.
+        /// If this is an Error value, assigns the Error value to the <paramref name="e"/> parameter.
         /// </summary>
-        /// <param name="e">A reference to a variable to hold the error value</param>
-        /// <returns>true if this is an Error Result, false otherwise</returns>
+        /// <param name="e">A reference to a variable to hold the Error value</param>
+        /// <returns>true if this is an Error value, false otherwise</returns>
         public bool TryError(out E e) {
             e = IsError ? ErrorValue : default(E);
 
@@ -87,13 +85,12 @@ namespace Scarp.Results {
         }
 
         /// <summary>
-        /// If this is an Ok Result, invokes onOk() with the return value.
-        /// If this is an Error Result, invokes onError() with the error value.
+        /// Returns the return value of the appropriate function, depending on whether this is an Ok or an Error value.
         ///
-        /// Both handlers must return something convertible to type R
+        /// Both handlers must return something convertible to type <typeparamref name="R" />
         /// </summary>
-        /// <param name="onOk">Invoked with the return value if this is an Ok Result</param>
-        /// <param name="onError">Invoked with the error if this is an Error Result</param>
+        /// <param name="onOk">Invoked with the Ok value</param>
+        /// <param name="onError">Invoked with the Error value</param>
         /// <typeparam name="R">The type returned by the handler functions</typeparam>
         /// <returns>The result of the handler invocation</returns>
         public R Handle<R>(Func<T, R> onOk, Func<E, R> onError) {
@@ -111,27 +108,21 @@ namespace Scarp.Results {
         /// <summary>
         /// JavaScript-like alias for Handle().
         ///
-        /// If this is an Ok Result, invokes onOk() with the return value.
-        /// If this is an Error Result, invokes onError() with the error value.
+        /// Returns the return value of the appropriate function, depending on whether this is an Ok or an Error value.
         ///
-        /// Both handlers must return something convertible to type R
+        /// Both handlers must return something convertible to type <typeparamref name="R" />
         /// </summary>
-        /// <param name="onOk">Invoked with the return value if this is an Ok Result</param>
-        /// <param name="onError">Invoked with the error if this is an Error Result</param>
+        /// <param name="onOk">Invoked with the Ok value</param>
+        /// <param name="onError">Invoked with the Error value</param>
         /// <typeparam name="R">The type returned by the handler functions</typeparam>
         /// <returns>The result of the handler invocation</returns>
         public R Then<R>(Func<T, R> onOk, Func<E, R> onError) => Handle(onOk, onError);
 
         /// <summary>
-        /// If this is an Ok Result, invokes onOk() with the return value.
-        /// If this is an Error Result, invokes onError() with the error value.
-        ///
-        /// Both handlers must return something convertible to type R
+        /// Invokes the appropriate <c>Action</c>, depending on whether this is an Ok or an Error value.
         /// </summary>
-        /// <param name="onOk">Invoked with the return value if this is an Ok Result</param>
-        /// <param name="onError">Invoked with the error if this is an Error Result</param>
-        /// <typeparam name="R">The type returned by the handler functions</typeparam>
-        /// <returns>The result of the handler invocation</returns>
+        /// <param name="onOk">Invoked with the Ok value</param>
+        /// <param name="onError">Invoked with the Error value</param>
         public void Handle(Action<T> onOk, Action<E> onError) {
             if (TryOk(out var ok)) {
                 onOk(ok);
@@ -149,57 +140,52 @@ namespace Scarp.Results {
         /// <summary>
         /// JavaScript-like alias for Handle().
         ///
-        /// If this is an Ok Result, invokes onOk() with the return value.
-        /// If this is an Error Result, invokes onError() with the error value.
-        ///
-        /// Both handlers must return something convertible to type R
+        /// <summary>
+        /// Invokes the appropriate <c>Action</c>, depending on whether this is an Ok or an Error value.
         /// </summary>
-        /// <param name="onOk">Invoked with the return value if this is an Ok Result</param>
-        /// <param name="onError">Invoked with the error if this is an Error Result</param>
-        /// <typeparam name="R">The type returned by the handler functions</typeparam>
-        /// <returns>The result of the handler invocation</returns>
+        /// <param name="onOk">Invoked with the Ok value</param>
+        /// <param name="onError">Invoked with the Error value</param>
         public void Then(Action<T> onOk, Action<E> onError) => Handle(onOk, onError);
 
         /// <summary>
-        /// If this is an Ok Result, invokes onOk() with the return value.
-        /// If this is an Error Result, propagates the error value.
+        /// Returns the return value of <paramref name="onOk" /> if this is an Ok value, passes an Error value through unmodified.
         /// </summary>
-        /// <param name="onOk">Invoked with the return value if this is an Ok Result</param>
-        /// <typeparam name="R">The type returned by the handler function</typeparam>
-        /// <returns>A Result<R, E> from invoking onOk() or propagating the error value</returns>
+        /// <param name="onOk">Invoked with the Ok value</param>
+        /// <typeparam name="R">The type returned by <paramref name="onOk" /></typeparam>
+        /// <returns>A Result&lt;R, E&gt; from invoking <paramref name="onOk" /> or propagating the error value</returns>
         public Result<R, E> Bind<R>(Func<T, Result<R, E>> onOk) => Handle(onOk, e => Result.Error(e));
 
         /// <summary>
         /// JavaScript-like alias for Bind().
         ///
-        /// If this is an Ok Result, invokes onOk() with the return value.
+        /// If this is an Ok Result, invokes <paramref name="onOk" /> with the return value.
         /// If this is an Error Result, propagates the error value.
         /// </summary>
-        /// <param name="onOk">Invoked with the return value if this is an Ok Result</param>
-        /// <typeparam name="R">The type returned by the handler function</typeparam>
-        /// <returns>A Result<R, E> from invoking onOk() or propagating the error value</returns>
+        /// <param name="onOk">Invoked with the Ok value</param>
+        /// <typeparam name="R">The return type of <paramref name="onOk" /></typeparam>
+        /// <returns>A Result&lt;T, E&gt;  invoking <paramref name="onOk" /> or propagating the error value</returns>
         public Result<R, E> Then<R>(Func<T, Result<R, E>> onOk) => Bind(onOk);
 
 
         /// <summary>
-        /// Maps a successful Ok Result to a new type, R.
-        /// Propagates an Error Result's value.
+        /// Maps an Ok value from a <typeparamref name="T" /> to an <typeparamref name="R" />by calling
+        /// <paramref name="onOk"/>, passes an Error value through unmodified.
         /// </summary>
-        /// <param name="onOk">Invoked with the return value if this is an Ok Result</param>
-        /// <typeparam name="R">The return type of onOk</typeparam>
-        /// <returns>A Result<R, E> from invoking onOk() or propagating the error value</returns>
+        /// <param name="onOk">Invoked with the Ok value</param>
+        /// <typeparam name="R">The return type of <paramref name="onOk" /></typeparam>
+        /// <returns>A Result&lt;T, E&gt;  invoking <paramref name="onOk" /> or propagating the error value</returns>
         public Result<R, E> Map<R>(Func<T, R> onOk) =>
             Handle<Result<R, E>>(
                 ok => Result.Ok(onOk(ok)),
                 e => Result.Error(e));
 
         /// <summary>
-        /// Maps an Error Result to a new type, E2.
-        /// Propagates an Ok Result's value.
+        /// Maps an Error value from an <typeparamref name="E" /> to an <typeparamref name="E2" /> by calling
+        /// <paramref name="onError"/>, passes an Ok value through unmodified.
         /// </summary>
-        /// <param name="onError">Invoked with the error value if this is an Error Result</param>
-        /// <typeparam name="E2">The return type of onError</typeparam>
-        /// <returns>A Result<T, E2> from propagating the Ok value or invoking onError()</returns>
+        /// <param name="onError">Invoked with the Error value</param>
+        /// <typeparam name="E2">The return type of <paramref name="onError"/></typeparam>
+        /// <returns>A Result&lt;T, E2&gt; from propagating the Ok value or invoking <paramref name="onError"/></returns>
         public Result<T, E2> MapError<E2>(Func<E, E2> onError) =>
             Handle<Result<T, E2>>(
                 ok => Result.Ok(ok),

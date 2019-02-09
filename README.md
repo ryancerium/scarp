@@ -204,58 +204,87 @@ public void ConfigureServices(IServiceCollection services) {
 }
 ```
 
-## Scarp.Result
+## Scarp.Results
 
 This class was inspired by Rust's `Result<T, E>` enum type.
 C# has limitations without a robust `match()` statement, but c'est la vie.
 
-### `static ResultOk<T> Result.Ok<T>(T t)`
+```c#
+static ResultOk<T> Ok<T>(T t)
+```
 
-Returns a `ResultOk<T>`, which is implicitly convertible to a `Result<T, E>` for any E.
+-   Creates a `ResultOk<T>`, which is implicitly convertible to a `Result<T, E>` for any `E`.
 
-### `static ResultError<E> Result.Error<E>(E e)`
+---
 
-Returns a `ResultError<E>`, which is implicitly convertible to a `Result<T, E>` for any T.
+```c#
+static ResultError<E> Error<E>(E e)
+```
 
-### `void Result<T, E>.Handle(Action<T> onOk, Action<E> onError)`
+-   Creates a `ResultError<E>`, which is implicitly convertible to a `Result<T, E>` for any `T`.
 
-### `void Result<T, E>.Then(Action<T> onOk, Action<E> onError)`
+---
 
-If the `Result<T, E>` contains an ok, then executes `onOk` with the ok value as the parameter.
-If the `Result<T, E>` contains an error, then executes `onError` with the error value as the parameter.
+```c#
+void Handle(Action<T> onOk, Action<E> onError)
+void Then(Action<T> onOk, Action<E> onError)
+```
 
-### `R Result<T, E>.Handle<R>(Func<T, R> onOk, Func<E, R> onError)`
+-   Invokes the appropriate action, depending on whether this is an Ok or an Error value.
 
-### `R Result<T, E>.Then<R>(Func<T, R> onOk, Func<E, R> onError)`
+---
 
-If the `Result<T, E>` contains an ok, then returns the value of `onOk` with the ok value as the parameter.
-If the `Result<T, E>` contains an error, then returns the value of `onError` with the error value as the parameter.
-I use this to return different `IActionResult` subclasses in my ASP.Net Core controllers.
+```c#
+R Handle<R>(Func<T, R> onOk, Func<E, R> onError)
+R Then<R>(Func<T, R> onOk, Func<E, R> onError)
+```
 
-### `Result<R, E> Result<T, E>.Bind<R>(Func<T, Result<R, E>> onOk)`
+-   Returns the return value of the appropriate function, depending on whether this is an Ok or an Error value.
+    I use this to return different `IActionResult` subclasses in my ASP.Net Core controllers.
 
-If the `Result<T, E>` contains an ok, then returns the value of `onOk` with the ok value as the parameter.
-If the `Result<T, E>` contains an error, then returns a `Result<R, E>` with that error.
+---
 
-### `Result<R, E> Result<T, E>.Map<R>(Func<T, R> onOk)`
+```c#
+Result<R, E> Bind<R>(Func<T, Result<R, E>> onOk)
+```
 
-If the `Result<T, E>` contains an ok, then returns a `Result<R, E>` with the return value of `onOk` with the ok value as the parameter.
-If the `Result<T, E>` contains an error, then returns a `Result<R, E>` with that error.
+-   Returns the return value of `onOk` if this is an Ok, passes an Error value through unmodified.
 
-### `Result<T, E2> Result<T, E>.MapError<E2>(Func<E, E2> onError)`
+---
 
-If the `Result<T, E>` contains an ok, then returns a `Result<T, E2>` with that ok.
-If the `Result<T, E>` contains an error, then returns a `Result<T, E2>` with the return value of `onError` with the error value as the parameter.
+```c#
+Result<R, E> Map<R>(Func<T, R> onOk)
+```
 
-### `bool Result<T, E>.TryOk(out T t)`
+-   Maps an Ok value from a `T` to an `R` by calling `onOk()`, passes an Error value through unmodified.
 
-If this is an Ok Result, assigns the ok return value to the t parameter.
-Returns true if this is an ok result.
+---
 
-### `bool Result<T, E>.TryError(out E e)`
+```c#
+Result<T, E2> MapError<E2>(Func<E, E2> onError)
+```
 
-If this is an Error Result, assigns the error value to the e parameter.
-Returns true if this is an error result.
+-   Maps an Error value from an `E` to an `E2` by calling `onError()`, passes an Ok value through unmodified.
+
+---
+
+```c#
+bool TryOk(out T t)
+```
+
+-   If this is an Ok, assigns the Ok value to the `t` parameter.
+    Returns `true` if this is an Ok.
+
+---
+
+```c#
+bool TryError(out E e)
+```
+
+-   If this is an Error, assigns the Error value to the `e` parameter.
+    Returns `true` if this is an Error.
+
+---
 
 ```c#
 using System.Linq;
