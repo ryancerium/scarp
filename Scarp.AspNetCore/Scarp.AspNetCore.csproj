@@ -10,7 +10,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <PackageDescription>ASP.Net Core Models for Scarp, a type-safe library for C# programming.</PackageDescription>
     <PackageId>Scarp.AspNetCore</PackageId>
-    <PackageLicenseUrl>https://github.com/ryancerium/scarp/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicense>https://github.com/ryancerium/scarp/blob/master/LICENSE</PackageLicense>
     <PackageProjectUrl>https://github.com/ryancerium/scarp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ryancerium/scarp</RepositoryUrl>
   </PropertyGroup>
