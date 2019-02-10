@@ -306,7 +306,7 @@ namespace Scarp.Blogging.Api.Controllers {
             return Result.Ok(t);
         }
 
-        [HttpGet("/name/{name}/post/{postNumber}")]
+        [HttpGet("/name/{blogUrl}/post/{postNumber}")]
         public ActionResult<Post> RetrievePost(AspString<Blog.UrlTag> blogUrl, int postNumber) {
             return NotNullOrError(
                 BloggingContext.Blogs.Include(blog => blog.Posts).FirstOrDefault(b => b.Url.Contains(blogUrl.Value)),
