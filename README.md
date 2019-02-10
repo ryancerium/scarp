@@ -326,6 +326,7 @@ namespace Scarp.Blogging.Api.Controllers {
 
 -   0.2
     -   **Breaking Change:** `Scarp.Result` namespace renamed `Scarp.Results`
+    -   Obsoleted the `Success` concept and made it `Ok` to match F# and Rust
     -   Add ASP.Net Core support
     -   Add EF Core support for nullable values and `String<Tag>`
     -   Add F# `Result<T, E>` APIs: `Bind()`, `Map()`, `MapError()`
